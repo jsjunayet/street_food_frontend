@@ -4,6 +4,7 @@ import { SignUpUser } from "@/services/AuthService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type FormData = {
   email: string;
@@ -23,12 +24,16 @@ const SignupForm = () => {
   const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
-    const { email, password } = data;
-    const payload = { email, password };
-    const res = await SignUpUser(payload);
-    if (res.data.success) {
-      router.push();
-      reset();
+    try {
+      const res = await SignUpUser(data);
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push("/login");
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (err: any) {
+      toast.error(err);
     }
   };
 

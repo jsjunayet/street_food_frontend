@@ -2,7 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/services/AuthService";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type FormData = {
   email: string;
@@ -16,13 +18,26 @@ const LoginForm = () => {
     setValue,
     formState: { errors },
   } = useForm<FormData>();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirectPath");
+  const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
-    const res = await loginUser(data);
-    if (res.data.success) {
+    try {
+      const res = await loginUser(data);
+      if (res?.success) {
+        toast.success(res?.message);
+        if (false) {
+          router.push(redirect);
+        } else {
+          router.push("/");
+        }
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (err: any) {
+      toast.error(err);
     }
-
-    // TODO: send to backend
   };
 
   const handleDefaultLogin = (type: "admin" | "user" | "premium") => {
