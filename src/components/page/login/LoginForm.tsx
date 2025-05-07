@@ -1,36 +1,40 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { loginUser } from "@/services/AuthService";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (email && password) {
-      console.log("Email:", email);
-      console.log("Password:", password);
-      setEmail("");
-      setPassword("");
-    } else {
-      console.log("Please fill in all fields");
+  const onSubmit = async (data: FormData) => {
+    const res = await loginUser(data);
+    if (res.data.success) {
     }
+
+    // TODO: send to backend
   };
 
   const handleDefaultLogin = (type: "admin" | "user" | "premium") => {
-    if (type === "admin") {
-      setEmail("admin@example.com");
-      setPassword("admin123");
-    } else if (type === "user") {
-      setEmail("user@example.com");
-      setPassword("user123");
-    } else if (type === "premium") {
-      setEmail("premium@example.com");
-      setPassword("premium123");
-    }
+    const presets = {
+      admin: { email: "admin@example.com", password: "admin123" },
+      user: { email: "shiblu90@example.com", password: "Shiblu@123" },
+      premium: { email: "premium@example.com", password: "premium123" },
+    };
+
+    const selected = presets[type];
+    setValue("email", selected.email);
+    setValue("password", selected.password);
   };
 
   return (
@@ -40,7 +44,7 @@ const LoginForm = () => {
           Welcome Back
         </h2>
 
-        {/* === New Buttons === */}
+        {/* === Role Buttons === */}
         <div className="mb-6 grid grid-cols-3 gap-2">
           <Button
             type="button"
@@ -65,7 +69,8 @@ const LoginForm = () => {
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* === Form === */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label
               htmlFor="email"
@@ -76,11 +81,21 @@ const LoginForm = () => {
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "Invalid email format",
+                },
+              })}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6b35]"
               placeholder="youremail@example.com"
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -101,11 +116,21 @@ const LoginForm = () => {
             <input
               id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#FF6b35]"
               placeholder="••••••••"
             />
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <Button
