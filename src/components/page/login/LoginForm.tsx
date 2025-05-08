@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 import { loginUser } from "@/services/AuthService";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,15 +17,17 @@ const LoginForm = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirectPath");
   const router = useRouter();
+  const { setIsLoading } = useUser();
 
   const onSubmit = async (data: FormData) => {
     try {
       const res = await loginUser(data);
+      setIsLoading(true);
       if (res?.success) {
         toast.success(res?.message);
         if (false) {
@@ -152,7 +155,7 @@ const LoginForm = () => {
             type="submit"
             className="w-full bg-[#FF6b35] hover:bg-[#FF6b35]/90"
           >
-            Log In
+            {isSubmitting ? "Logging...." : "Login"}
           </Button>
         </form>
 

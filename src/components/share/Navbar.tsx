@@ -1,13 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser, logout } from "@/services/AuthService";
 import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
+  const [user, setUser] = useState<UserToken | null>(null);
+  const router = useRouter();
+  console.log(user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuAnimating, setIsMenuAnimating] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -32,6 +37,19 @@ const Navbar = () => {
       setIsMenuOpen(true);
     }
   };
+  const handleLogout = async () => {
+    logout();
+    setUser(null);
+    router.push("/");
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await getCurrentUser();
+      setUser(user); // Store the user data
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -55,10 +73,10 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/explore"
+            href="/allpost"
             className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
-            Explore
+            AllPost
           </Link>
           <Link
             href="/categories"
@@ -67,10 +85,16 @@ const Navbar = () => {
             Categories
           </Link>
           <Link
-            href="/premium"
+            href="/about"
             className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
-            Premium
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+          >
+            Contact
           </Link>
         </div>
 
@@ -84,7 +108,7 @@ const Navbar = () => {
             <Search className="h-4 w-4" />
           </Button>
 
-          {isLoggedIn ? (
+          {user ? (
             <div className="flex items-center gap-4">
               <Link href="/profile">
                 <div className="w-9 h-9 rounded-full bg-[#FFC15E]  font-serif text-[#333333] flex items-center justify-center">
@@ -92,22 +116,23 @@ const Navbar = () => {
                 </div>
               </Link>
               <Button
-                variant="ghost"
-                onClick={() => setIsLoggedIn(false)}
-                className=" font-serif text-[#333333]"
+                variant="secondary"
+                onClick={() => handleLogout()}
+                className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors cursor-pointer"
               >
                 Logout
               </Button>
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => setIsLoggedIn(true)}
-                className=" font-serif text-[#333333]"
-              >
-                Login
-              </Button>
+              <Link href={"login"}>
+                <Button
+                  variant="ghost"
+                  className=" font-serif text-[#333333]  transition-colors"
+                >
+                  Login
+                </Button>
+              </Link>
               <Link href={"/signup"}>
                 <Button className="bg-[#FF6b35] text-white hover:bg-[#FF6b35]/90">
                   Sign Up
@@ -149,11 +174,11 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              href="/explore"
+              href="/allpost"
               className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
               onClick={toggleMenu}
             >
-              Explore
+              allpost
             </Link>
             <Link
               href="/categories"
@@ -171,7 +196,7 @@ const Navbar = () => {
             </Link>
 
             <div className="pt-2 border-t border-gray-100">
-              {isLoggedIn ? (
+              {user ? (
                 <div className="flex flex-col space-y-3">
                   <Link
                     href="/profile"
@@ -186,7 +211,7 @@ const Navbar = () => {
                   <Button
                     variant="ghost"
                     onClick={() => {
-                      setIsLoggedIn(false);
+                      handleLogout();
                       toggleMenu();
                     }}
                     className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"
@@ -196,16 +221,18 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex flex-col space-y-3">
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setIsLoggedIn(true);
-                      toggleMenu();
-                    }}
-                    className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"
-                  >
-                    Login
-                  </Button>
+                  <Link href={"login"}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setIsLoggedIn(true);
+                        toggleMenu();
+                      }}
+                      className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"
+                    >
+                      Login
+                    </Button>
+                  </Link>
                   <Link href={"/signup"}>
                     <Button className="bg-[#FF6b35] text-white hover:bg-[#FF6b35]/90 w-full">
                       Sign Up

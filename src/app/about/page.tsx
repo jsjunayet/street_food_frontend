@@ -1,5 +1,11 @@
+import AboutPage from "@/components/page/about/AboutPage";
+
 const About = () => {
-  return <div>hlll</div>;
+  return (
+    <div>
+      <AboutPage />
+    </div>
+  );
 };
 
 export default About;

@@ -1,9 +1,11 @@
 "use server";
 import { jwtDecode } from "jwt-decode";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
 
 export const SignUpUser = async (userData: FieldValues) => {
+  console.log(userData);
   try {
     const res = await fetch(`http://127.0.0.1:5000/api/v1/user/register`, {
       method: "POST",
@@ -13,11 +15,13 @@ export const SignUpUser = async (userData: FieldValues) => {
       body: JSON.stringify(userData),
     });
     const result = await res.json();
+    console.log(result);
     // if (result.success) {
     //   (await cookies()).set("accessToken", result.data.accessToken);
     //   //   (await cookies()).set("refreshToken", result?.data?.refreshToken);
     // }
     return result;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return Error(error);
   }
@@ -38,7 +42,9 @@ export const loginUser = async (userData: FieldValues) => {
 
     if (result?.success) {
       (await cookies()).set("accessToken", result?.data?.accessToken);
-      //   (await cookies()).set("refreshToken", result?.data?.refreshToken);
+      (await cookies()).set("refreshToken", result?.data?.refreshToken);
+
+      revalidateTag("loginUser");
     }
 
     return result;
@@ -62,22 +68,26 @@ export const getCurrentUser = async () => {
 
 export const logout = async () => {
   (await cookies()).delete("accessToken");
+  revalidateTag("loginUser");
 };
 
 export const getNewToken = async () => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/auth/refresh-token`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/refreshToken`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: (await cookies()).get("refreshToken")!.value,
+          Authorization: `Bearer ${
+            (await cookies()).get("refreshToken")!.value
+          }`,
         },
       }
     );
 
     return res.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return Error(error);
   }
