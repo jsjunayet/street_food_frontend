@@ -60,6 +60,7 @@ export const getCurrentUser = async () => {
 
   if (accessToken) {
     decodedData = await jwtDecode(accessToken);
+    console.log(decodedData);
     return decodedData;
   } else {
     return null;

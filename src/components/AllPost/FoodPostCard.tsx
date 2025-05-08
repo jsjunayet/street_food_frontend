@@ -7,11 +7,13 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/UserContext";
 import {
   createComment,
   createRating,
   createVote,
 } from "@/services/postService";
+import { formatDistanceToNow } from "date-fns";
 import {
   Flag,
   MapPin,
@@ -26,6 +28,7 @@ import {
 import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import PremiumBadge from "../share/PremiumBage";
 
 interface User {
   name: string;
@@ -73,44 +76,29 @@ export interface IPost {
 
 interface FoodPostCardProps {
   post: IPost;
-  onLike: (postId: number) => void;
-  onBookmark: (postId: number) => void;
-  onRatePost: (postId: number, rating: number) => void;
-  onLocationClick?: (location: string, coordinates?: Coordinates) => void;
 }
 
-const FoodPostCard: React.FC<FoodPostCardProps> = ({
-  post,
-  onLocationClick,
-}) => {
-  console.log(post);
+const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
+  const { user } = useUser();
   const [newComment, setNewComment] = useState("");
   const [showRatingPanel, setShowRatingPanel] = useState(false);
-  const [vote, setVote] = useState<"UP" | "DOWN" | null>(null);
-
   const handleVote = async (type: "UP" | "DOWN", postId: string) => {
-    const newVote = vote === type ? null : type; // toggle logic
-    setVote(newVote);
     const data = {
       postId,
-      vote: newVote,
+      vote: type,
     };
-
-    console.log(data, "data");
-    const res = await createVote(data);
-    console.log(res);
+    await createVote(data);
   };
 
   const handleAddComment = async (postId: string) => {
     const payload = { postId, commentText: newComment };
-    const res = await createComment(payload);
-    console.log(res);
+    await createComment(payload);
+    setNewComment("");
   };
   const handleRatePost = async (postId: string, start: number) => {
     const payload = { postId, rating: start };
-    const res = await createRating(payload);
-    console.log(res);
+    await createRating(payload);
   };
 
   const handleShareClick = () => {
@@ -122,17 +110,15 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
       navigator
         .share({
           title: `Food Discovery by ${post.user.name}`,
-          text: post.content.substring(0, 100) + "...",
+          text: post.description.substring(0, 100) + "...",
           url: shareUrl,
         })
         .then(() => toast.success("Post shared successfully"))
         .catch((error) => {
           console.error("Error sharing:", error);
-          // Fall back to clipboard if sharing fails
           copyToClipboard(shareUrl);
         });
     } else {
-      // Fall back to clipboard for browsers that don't support Web Share API
       copyToClipboard(shareUrl);
     }
   };
@@ -148,10 +134,12 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
     );
   };
 
-  const handleLocationClick = () => {
-    if (onLocationClick) {
-      onLocationClick(post.location, post.coordinates);
-    }
+  const handleLocationClick = (location: string) => {
+    const query = encodeURIComponent(location);
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${query}`,
+      "_blank"
+    );
   };
 
   // Generate star rating display
@@ -211,20 +199,25 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-4">
-            <Avatar>
+        <div className="md:flex justify-between items-start">
+          <div className="flex items-center justify-center md:justify-normal gap-4">
+            <Avatar className=" h-12 w-12">
               <AvatarImage src={post.user.avatar} alt={post.user?.email} />
               <AvatarFallback>{post.user?.email.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-semibold">{post.user?.email}</div>
-              <div className="flex items-center text-sm text-gray-500">
-                <span>{"5 horus"}</span>
-                <span className="mx-1">•</span>
+              <div className="font-semibold">{post.user?.name}</div>
+              <div className=" text-sm text-gray-500">
+                <span>
+                  {" "}
+                  {formatDistanceToNow(new Date(post?.createdAt), {
+                    addSuffix: true,
+                  })}
+                </span>
+
                 <button
-                  onClick={handleLocationClick}
-                  className="flex items-center text-blue-600 hover:underline"
+                  onClick={() => handleLocationClick(post.location)}
+                  className="flex items-center text-blue-600 hover:underline cursor-pointer"
                 >
                   <MapPin className="h-3 w-3 mr-1" />
                   <span>{post.location}</span>
@@ -233,15 +226,25 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {renderRating(post.averageRating)}
-            <Button variant="ghost" size="sm">
-              <Flag className="h-4 w-4" />
-            </Button>
+          <div className="">
+            <div className="flex items-center justify-center md:justify-normal gap-2">
+              {renderRating(post.averageRating)}
+              <Button variant="ghost" size="sm">
+                <Flag className="h-4 w-4" />
+              </Button>
+            </div>
+            {post.isPremium && (
+              <div className="mt-1 text-center">
+                <PremiumBadge />
+              </div>
+            )}
           </div>
         </div>
       </CardHeader>
       <CardContent>
+        <h2 className="text-gray-700 mb-4 whitespace-pre-line font-semibold text-2xl">
+          {post.title}
+        </h2>
         <p className="text-gray-700 mb-4 whitespace-pre-line">
           {post.description}
         </p>
@@ -277,6 +280,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
             )}
           </div>
         )} */}
+
         <Image
           height={500}
           width={500}
@@ -284,7 +288,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
             "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop"
           }
           alt={`Food image`}
-          className="rounded-lg w-full object-cover max-h-96"
+          className="rounded-lg w-full object-cover max-h-96 "
         />
 
         {showRatingPanel && renderRatingPanel()}
@@ -303,13 +307,13 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className={vote === "UP" ? "text-blue-600" : ""}
+              // className={vote === "UP" ? "text-blue-600" : ""}
               onClick={() => handleVote("UP", post.id)}
             >
               <ThumbsUp
-                className={`h-4 w-4 mr-2 ${
-                  vote === "UP" ? "fill-blue-600" : ""
-                }`}
+              // className={`h-4 w-4 mr-2 ${
+              //   vote === "UP" ? "fill-blue-600" : ""
+              // }`}
               />
               Like
             </Button>
@@ -317,13 +321,13 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className={vote === "DOWN" ? "text-red-600" : ""}
+              // className={vote === "DOWN" ? "text-red-600" : ""}
               onClick={() => handleVote("DOWN", post.id)}
             >
               <ThumbsDown
-                className={`h-4 w-4 mr-2 ${
-                  vote === "DOWN" ? "fill-red-600" : ""
-                }`}
+              // className={`h-4 w-4 mr-2 ${
+              //   vote === "DOWN" ? "fill-red-600" : ""
+              // }`}
               />
               Dislike
             </Button>
@@ -356,9 +360,9 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
               <div key={comment.id} className="py-3 border-t">
                 <div className="flex gap-3">
                   <Avatar className="h-8 w-8">
-                    {/* <AvatarImage src={comment.user.avatar} /> */}
+                    <AvatarImage src={comment?.user?.image} />
                     <AvatarFallback>
-                      {comment?.user?.email.charAt(0)}
+                      {comment?.user?.name?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -369,7 +373,11 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
                       <p className="text-sm">{comment?.commentText}</p>
                     </div>
                     <div className="flex gap-4 mt-1 text-xs text-gray-500">
-                      <button>{comment.createdAt.toString()}</button>
+                      <button>
+                        {formatDistanceToNow(new Date(comment.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </button>
                       {/* <button>Like ({comment.likes})</button> */}
                       <button>Reply</button>
                     </div>
@@ -380,6 +388,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({
 
             <div className="flex items-center gap-2 mt-3">
               <Avatar className="h-8 w-8">
+                <AvatarImage src={user.image} />
                 <AvatarFallback>You</AvatarFallback>
               </Avatar>
               <div className="flex-1 relative">
