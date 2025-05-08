@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const GoPremium = () => {
   return (
@@ -18,9 +19,11 @@ const GoPremium = () => {
               and support our community of food enthusiasts.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-[#FFC15E] text-black hover:bg-[#FFC15E]/90 px-8 py-6 text-lg">
-                Go Premium
-              </Button>
+              <Link href={"/premium"}>
+                <Button className="bg-[#FFC15E] cursor-pointer text-black hover:bg-[#FFC15E]/90 px-8 py-6 text-lg">
+                  Go Premium
+                </Button>
+              </Link>
               <Button
                 variant="outline"
                 className="bg-[#FF6B35] text-white hover:bg-white/10 px-8 py-6 text-lg"

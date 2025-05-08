@@ -1,22 +1,20 @@
 import PremiumBadge from "@/components/share/PremiumBage";
 import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 interface FoodSpotCardProps {
   id: string;
   title: string;
   description: string;
-  imageUrl: string;
-  rating: number;
+  image: string;
+  averageRating: number;
   priceRange: string;
-  category: string;
+  category: string[];
   location: string;
   isPremium?: boolean;
-  votes: {
-    upvotes: number;
-    downvotes: number;
-  };
+  upVotes: number;
+  downVotes: number;
+  totalComments: number;
   className?: string;
 }
 
@@ -24,13 +22,15 @@ const FoodSpotCard = ({
   id,
   title,
   description,
-  imageUrl,
-  rating,
+  image,
+  averageRating,
   priceRange,
   category,
   location,
-  isPremium = false,
-  votes,
+  isPremium,
+  upVotes,
+  downVotes,
+  totalComments,
   className = "",
 }: FoodSpotCardProps) => {
   return (
@@ -45,40 +45,36 @@ const FoodSpotCard = ({
       )}
 
       {/* Food Image */}
-      <Link href={`/food/${id}`}>
-        <div className="aspect-video relative overflow-hidden">
-          <Image
-            height={400}
-            width={400}
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          />
-          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent h-16"></div>
-          <div className="absolute bottom-2 left-3 flex items-center gap-1">
-            <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
-              {category}
-            </div>
-            <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
-              {priceRange}
-            </div>
+
+      <div className="aspect-video relative overflow-hidden">
+        <Image
+          height={400}
+          width={400}
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent h-16"></div>
+        <div className="absolute bottom-2 left-3 flex items-center gap-1">
+          <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
+            {category["name"]}
+          </div>
+          <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
+            {priceRange}
           </div>
         </div>
-      </Link>
+      </div>
 
       {/* Content */}
       <div className="p-4">
         <div className="flex justify-between items-start">
-          <Link href={`/food/${id}`}>
-            <h3 className="text-lg font-bold text-street-dark hover:text-street-orange transition-colors truncate">
-              {title}
-            </h3>
-          </Link>
+          <h3 className="text-lg font-bold text-street-dark hover:text-street-orange transition-colors truncate">
+            {title}
+          </h3>
+
           <div className="flex items-center bg-street-cream rounded-full px-2 py-0.5">
             <Star className="h-4 w-4 text-street-orange fill-street-orange" />
-            <span className="ml-1 text-sm font-medium">
-              {rating.toFixed(1)}
-            </span>
+            <span className="ml-1 text-sm font-medium">{averageRating}</span>
           </div>
         </div>
 
@@ -113,19 +109,16 @@ const FoodSpotCard = ({
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-1 text-gray-500 hover:text-street-orange transition-colors">
               <ArrowUp className="h-4 w-4" />
-              <span className="text-xs font-medium">{votes.upvotes}</span>
+              <span className="text-xs font-medium">{upVotes}</span>
             </button>
             <button className="flex items-center gap-1 text-gray-500 hover:text-street-red transition-colors">
               <ArrowDown className="h-4 w-4" />
-              <span className="text-xs font-medium">{votes.downvotes}</span>
+              <span className="text-xs font-medium">{downVotes}</span>
             </button>
           </div>
-          <Link
-            href={`/food/${id}`}
-            className="text-street-orange hover:text-street-red transition-colors text-sm font-medium"
-          >
-            View Details
-          </Link>
+          <div className="text-street-orange hover:text-street-red transition-colors text-sm font-medium">
+            {totalComments} comments
+          </div>
         </div>
       </div>
     </div>

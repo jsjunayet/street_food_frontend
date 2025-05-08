@@ -91,6 +91,12 @@ const Navbar = () => {
           >
             Contact
           </Link>
+          <Link
+            href="/premium"
+            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+          >
+            Premium
+          </Link>
         </div>
 
         {/* Desktop Search & Auth */}
