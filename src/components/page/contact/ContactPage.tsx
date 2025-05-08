@@ -46,13 +46,13 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center md:mt-0 mt-16 justify-center py-10 px-4 bg-white">
+    <div className="min-h-screen flex flex-col items-center md:mt-0 mt-10 justify-center py-10 px-4 bg-white">
       <h1 className="text-4xl font-bold mb-8 text-gradient">Contact Us</h1>
 
       <Card className="max-w-4xl w-full shadow-xl border border-gray-200 bg-white">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           {/* Contact Information */}
-          <div className="bg-gradient-to-br from-yellow-500 to-red-500 p-8 rounded-l-lg text-white">
+          <div className="bg-[#FF6b35] p-8 rounded-l-lg text-white">
             <CardHeader className="p-0 pb-6">
               <CardTitle className="text-2xl font-semibold mb-2">
                 Let’s Talk Street Food!

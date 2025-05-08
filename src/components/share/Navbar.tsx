@@ -78,12 +78,7 @@ const Navbar = () => {
           >
             AllPost
           </Link>
-          <Link
-            href="/categories"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
-          >
-            Categories
-          </Link>
+
           <Link
             href="/about"
             className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
@@ -180,13 +175,7 @@ const Navbar = () => {
             >
               allpost
             </Link>
-            <Link
-              href="/categories"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
-              onClick={toggleMenu}
-            >
-              Categories
-            </Link>
+
             <Link
               href="/premium"
               className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"

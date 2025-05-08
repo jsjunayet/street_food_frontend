@@ -5,7 +5,7 @@ import React from "react";
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="min-h-screen py-16 mt-10">
+    <div className="min-h-screen mt-10">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -13,10 +13,9 @@ const AboutPage: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mb-4">
+          <h1 className="text-3xl md:text-4xl font-semibold   ">
             AboutPage StreetFlavors
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -24,10 +23,10 @@ const AboutPage: React.FC = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200"
+            className="bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200"
           >
             <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
-              <span className="w-2 h-10 bg-indigo-500 rounded-full mr-3"></span>
+              <span className="w-2 h-10 bg-[#FF6b35] rounded-full mr-3"></span>
               Welcome to StreetFlavors
             </h2>
             <p className="text-lg leading-relaxed text-slate-700">
@@ -46,7 +45,7 @@ const AboutPage: React.FC = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200"
+            className="bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200"
           >
             <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
               <span className="w-2 h-10 bg-purple-500 rounded-full mr-3"></span>
@@ -64,10 +63,10 @@ const AboutPage: React.FC = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200 lg:col-span-2"
+            className="bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200 lg:col-span-2"
           >
             <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
-              <span className="w-2 h-10 bg-pink-500 rounded-full mr-3"></span>
+              <span className="w-2 h-10 bg-[#FF6b35] rounded-full mr-3"></span>
               Why Choose Us?
             </h2>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -114,10 +113,10 @@ const AboutPage: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-12 bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200"
+          className="mt-12 bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200"
         >
           <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
-            <span className="w-2 h-10 bg-indigo-500 rounded-full mr-3"></span>
+            <span className="w-2 h-10 bg-[#FF6b35] rounded-full mr-3"></span>
             What We Offer
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -169,7 +168,7 @@ const AboutPage: React.FC = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200"
+            className="bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200"
           >
             <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
               <span className="w-2 h-10 bg-purple-500 rounded-full mr-3"></span>
@@ -186,7 +185,7 @@ const AboutPage: React.FC = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl shadow-lg border border-slate-200"
+            className="bg-[#FFFFF] p-8 rounded-2xl shadow-lg border border-slate-200"
           >
             <h2 className="text-2xl font-bold mb-6 text-slate-800 flex items-center">
               <span className="w-2 h-10 bg-pink-500 rounded-full mr-3"></span>
@@ -204,7 +203,7 @@ const AboutPage: React.FC = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="mt-12 bg-gradient-to-r from-indigo-500/80 to-purple-500/80 p-8 rounded-2xl shadow-lg border border-indigo-400/20 text-center"
+          className="mt-12 bg-[#FF6b35] p-8 rounded-2xl shadow-lg border border-indigo-400/20 text-center"
         >
           <h2 className="text-2xl font-bold mb-6 text-white">Get In Touch</h2>
           <p className="text-lg leading-relaxed text-white max-w-3xl mx-auto">

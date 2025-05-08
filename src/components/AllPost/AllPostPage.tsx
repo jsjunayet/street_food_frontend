@@ -368,7 +368,7 @@ const AllPostPage = ({ posts, categoriess }) => {
                   onClick={() => setPopularOnly(!popularOnly)}
                   size="sm"
                 >
-                  🔥 Popular Only
+                  🔥 Popular Only 5+
                 </Button>
 
                 <Button

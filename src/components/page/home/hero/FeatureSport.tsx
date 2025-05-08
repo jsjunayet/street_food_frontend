@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import FoodSpotCard from "../foodSpotList/FoodSpotCard";
 
 // Sample featured food spots data
@@ -88,12 +89,14 @@ const FeaturedSpots = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-street-dark">
             Popular Food Spots
           </h2>
-          <Button
-            variant="ghost"
-            className="text-street-orange hover:text-street-orange/90 flex items-center gap-2"
-          >
-            View All <ArrowRight className="w-4 h-4" />
-          </Button>
+          <Link href={"/allpost"}>
+            <Button
+              variant="ghost"
+              className="text-street-orange hover:text-street-orange/90 flex items-center gap-2"
+            >
+              View All <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

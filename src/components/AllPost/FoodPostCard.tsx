@@ -295,10 +295,13 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
 
         <div className="flex justify-between text-sm text-gray-500 pt-2">
           <div className=" flex items-center gap-2">
-            <span>{post.upVotes} likes</span>
-            <span>{post.downVotes} Dislike</span>
+            <span className="text-blue-600">{post.upVotes} likes</span>
+            <span className="text-red-600">{post.downVotes} Dislike</span>
           </div>
-          <span>{post.totalComments} comments</span>
+          <div>
+            <span>{post.totalComments} comments</span>
+            <p className="text-blue-600 font-medium"> Price : {post.price}</p>
+          </div>
         </div>
       </CardContent>
       <CardFooter className="border-t pt-3 flex flex-col">
