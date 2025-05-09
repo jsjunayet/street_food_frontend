@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { SignUpUser } from "@/services/AuthService";
 import { singleImageUpaload } from "@/utlity/cloudinary";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type FormData = {
-  name: string;
+  name?: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -35,25 +36,24 @@ const SignupForm = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    if (!selectedFile) {
-      toast.error("Please upload an image.");
-      return;
-    }
-
     setUploading(true);
     try {
-      const imageUrl = await singleImageUpaload(selectedFile);
-      if (!imageUrl) {
-        toast.error("Image upload failed.");
-        return;
+      let imageUrl: string | null = null;
+
+      if (selectedFile) {
+        imageUrl = await singleImageUpaload(selectedFile);
+        if (!imageUrl) {
+          toast.error("Image upload failed.");
+          return;
+        }
       }
+
       const payload = {
-        name: data.name,
+        name: data.name || "", // Optional name
         email: data.email,
         password: data.password,
-        image: imageUrl,
+        image: imageUrl || "", // Optional image
       };
-      console.log(payload);
 
       const res = await SignUpUser(payload);
 
@@ -71,31 +71,28 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center px-4">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full border">
         <h2 className="text-2xl font-bold text-center mb-6 text-[#333333]">
           Create an Account
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Name */}
+          {/* Name (Optional) */}
           <div>
             <label
               htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Full Name
+              Full Name (Optional)
             </label>
             <input
               id="name"
               type="text"
-              {...register("name", { required: "Name is required" })}
+              {...register("name")}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               placeholder="John Doe"
             />
-            {errors.name && (
-              <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
-            )}
           </div>
 
           {/* Email */}
@@ -177,16 +174,16 @@ const SignupForm = () => {
             )}
           </div>
 
-          {/* Image Upload */}
+          {/* Image Upload (Optional) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Profile Picture
+              Profile Picture (Optional)
             </label>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2">
               <label
                 htmlFor="image"
-                className="cursor-pointer px-4 py-2 bg-[#FF6b35] text-white rounded-md hover:bg-[#FF6b35]/90 transition"
+                className="w-full text-center cursor-pointer px-4 py-2 bg-[#FF6b35] text-white rounded-md hover:bg-[#FF6b35]/90 transition"
               >
                 {selectedFile ? "Change Image" : "Upload Image"}
               </label>
@@ -203,13 +200,20 @@ const SignupForm = () => {
             </div>
 
             {selectedFile && (
-              <div className="mt-2 flex items-center gap-3">
-                <img
+              <div className="mt-3">
+                <p className="text-sm font-medium text-gray-700 mb-1">
+                  Selected Image:
+                </p>
+                <Image
+                  height={200}
+                  width={400}
                   src={URL.createObjectURL(selectedFile)}
                   alt="Preview"
-                  className="w-16 h-16 object-cover rounded-full border"
+                  className="w-full h-48 object-cover rounded-md border"
                 />
-                <p className="text-sm text-gray-600">{selectedFile.name}</p>
+                <p className="text-sm text-gray-600 mt-1 truncate">
+                  {selectedFile.name}
+                </p>
               </div>
             )}
           </div>
@@ -241,7 +245,6 @@ const SignupForm = () => {
           </Button>
         </form>
 
-        {/* Already have account */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}

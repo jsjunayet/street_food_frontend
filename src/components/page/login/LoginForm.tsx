@@ -45,9 +45,9 @@ const LoginForm = () => {
 
   const handleDefaultLogin = (type: "admin" | "user" | "premium") => {
     const presets = {
-      admin: { email: "admin@example.com", password: "admin123" },
-      user: { email: "shiblu90@example.com", password: "Shiblu@123" },
-      premium: { email: "premium@example.com", password: "premium123" },
+      admin: { email: "admin@gmail.com", password: "123456" },
+      user: { email: "normaluser@gmail.com", password: "123456" },
+      premium: { email: "premium@gmail.com", password: "123456" },
     };
 
     const selected = presets[type];
@@ -66,13 +66,6 @@ const LoginForm = () => {
         <div className="mb-6 grid grid-cols-3 gap-2">
           <Button
             type="button"
-            onClick={() => handleDefaultLogin("admin")}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Admin
-          </Button>
-          <Button
-            type="button"
             onClick={() => handleDefaultLogin("user")}
             className="bg-green-600 hover:bg-green-700 text-white"
           >
@@ -84,6 +77,13 @@ const LoginForm = () => {
             className="bg-purple-600 hover:bg-purple-700 text-white"
           >
             Premium
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleDefaultLogin("admin")}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Admin
           </Button>
         </div>
 

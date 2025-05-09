@@ -98,7 +98,7 @@ const Navbar = () => {
           >
             Premium
           </Link>
-          {user?.role === "USER" && (
+          {user?.role === "ADMIN" && (
             <Link
               href="/dashboard"
               className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"

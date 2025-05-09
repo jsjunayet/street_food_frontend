@@ -18,7 +18,7 @@ const Category = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="bg-street-cream rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-[#FFFBF1] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
               <span className="text-[#FF6b35] text-2xl font-bold">1</span>
             </div>
             <h3 className="text-xl font-bold mb-2">Discover Spots</h3>
