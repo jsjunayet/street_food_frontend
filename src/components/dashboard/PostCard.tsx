@@ -100,14 +100,16 @@ const PostCard: React.FC<PostCardProps> = ({
       className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
       onClick={onClick}
     >
-      <div className="aspect-video relative">
-        <Image
-          width={500}
-          height={500}
-          src={imageUrl}
-          alt={title}
-          className="object-cover w-full h-full"
-        />
+      <div className="aspect-video  relative">
+        <div className=" ">
+          <Image
+            width={500}
+            height={500}
+            src={imageUrl}
+            alt={title}
+            className="object-cover w-full h-full"
+          />
+        </div>
         <div className="absolute top-2 right-2 flex gap-2">
           {getStatusBadge()}
           {premium && (

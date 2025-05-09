@@ -28,7 +28,7 @@ const StatCard: React.FC<StatCardProps> = ({
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <h3 className="text-2xl font-bold mt-1">{value}</h3>
           </div>
-          <div className="p-2 bg-primary/10 rounded-full">{icon}</div>
+          <div className="p-2 bg-[#FF6b35]/30 rounded-full">{icon}</div>
         </div>
       </CardContent>
       {change && (

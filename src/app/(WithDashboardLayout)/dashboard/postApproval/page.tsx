@@ -1,9 +1,11 @@
 import Posts from "@/components/page/Dashbaord/Posts";
+import { getAllPostForAdmin } from "@/services/postService";
 
-const postApproval = () => {
+const postApproval = async () => {
+  const result = await getAllPostForAdmin();
   return (
     <div>
-      <Posts />
+      <Posts allposts={result.data} />
     </div>
   );
 };

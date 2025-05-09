@@ -8,7 +8,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="bg-[ rounded-full p-1">
+              <div className="bg-[#FF6b35] rounded-full p-1">
                 <div className="w-6 h-6 text-white flex items-center justify-center font-bold">
                   SG
                 </div>

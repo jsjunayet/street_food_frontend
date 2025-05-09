@@ -18,13 +18,13 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const AdminSidebar = () => {
-  const router = useRouter();
+  const pathname = usePathname();
 
   const isActive = (path: string) => {
-    return router.pathname === path;
+    return pathname === path;
   };
 
   const menuItems = [
@@ -63,10 +63,10 @@ const AdminSidebar = () => {
   return (
     <Sidebar>
       <div className="p-4 flex items-center gap-2">
-        <div className="w-8 h-8 rounded-full bg-foodie-green flex items-center justify-center">
-          <span className="text-white font-bold">F</span>
+        <div className="w-8 h-8 rounded-full bg-[#FF6b35]/50 flex items-center justify-center">
+          <span className="text-white font-bold">SG</span>
         </div>
-        <h1 className="text-xl font-bold">Foodie Admin</h1>
+        <h1 className="text-xl text-[#FF6b35]/90 font-bold">StreetGrub</h1>
       </div>
 
       <SidebarContent>
@@ -77,7 +77,7 @@ const AdminSidebar = () => {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton
-                    className={isActive(item.path) ? "bg-sidebar-accent" : ""}
+                    className={isActive(item.path) ? "bg-[#FF6b35]/30" : ""}
                     asChild
                   >
                     <Link href={item.path}>

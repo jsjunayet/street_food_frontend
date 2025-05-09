@@ -13,9 +13,7 @@ export default async function Home() {
         <div className=" max-w-7xl mx-auto py-12">
           <FeaturedSpots user={res.data} />
           <Category />
-
           {/* <FoodSpotList /> */}
-
           <GoPremium />
         </div>
       </main>

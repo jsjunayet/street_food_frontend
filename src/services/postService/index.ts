@@ -27,6 +27,30 @@ export const getAllPost = async () => {
     return Error(error.message);
   }
 };
+export const getAllPostForAdmin = async () => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/v1/post/all-retreive-admin`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["post"], // Optional Next.js cache control
+        },
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: any) {
+    return Error(error.message);
+  }
+};
 
 // create post
 export const createPost = async (postData: FormData): Promise<any> => {
@@ -41,6 +65,53 @@ export const createPost = async (postData: FormData): Promise<any> => {
       },
       body: JSON.stringify(postData),
     });
+    const result = await res.json();
+    revalidateTag("post");
+    return result;
+  } catch (error: any) {
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+
+export const premiumAprroved = async (id: string): Promise<any> => {
+  const token = (await cookies()).get("accessToken")!.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/post/premium/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const result = await res.json();
+    revalidateTag("post");
+    return result;
+  } catch (error: any) {
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+export const postAprroved = async (
+  id: string,
+  status: string
+): Promise<any> => {
+  const token = (await cookies()).get("accessToken")!.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/post/approve/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      }
+    );
     const result = await res.json();
     revalidateTag("post");
     return result;

@@ -1,8 +1,7 @@
 "use client";
-import PostCard from "@/components/dashboard/PostCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import StatCard from "@/components/dashboard/StartCard";
-import { mockActivity, mockPosts, mockStats } from "@/components/data/mockData";
+import { mockActivity, mockStats } from "@/components/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PostStatus } from "@/types";
 import { FileText, MessageSquare, Star, Users } from "lucide-react";
@@ -115,7 +114,7 @@ const Dashboard = () => {
         <RecentActivity activities={mockActivity} />
       </div>
 
-      <div>
+      {/* <div>
         <h2 className="text-xl font-semibold mb-4">Pending Approval</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {mockPosts
@@ -137,7 +136,7 @@ const Dashboard = () => {
               />
             ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

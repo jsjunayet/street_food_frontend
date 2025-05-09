@@ -35,7 +35,7 @@ const AdminHeader = () => {
   };
 
   return (
-    <header className="border-b h-16 bg-gradient-to-r from-slate-800 to-slate-700 text-white px-6 flex items-center justify-between shadow-md">
+    <header className="border-b h-16 bg-[#FF6b35]/80 text-white px-6 flex items-center justify-between shadow-md">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="text-white hover:bg-slate-600" />
         <h1 className="text-xl font-medium hidden md:block">

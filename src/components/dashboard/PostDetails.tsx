@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Download, MessageSquare, Star, X } from "lucide-react";
-import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -165,9 +164,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 className="mt-0 p-4 border rounded-md h-full"
               >
                 <div className="aspect-video mb-4">
-                  <Image
-                    height={500}
-                    width={500}
+                  <img
                     src={post.imageUrl}
                     alt={post.title}
                     className="w-full h-full object-cover rounded-md"
