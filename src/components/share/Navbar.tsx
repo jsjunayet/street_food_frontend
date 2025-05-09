@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const Navbar = () => {
   const [user, setUser] = useState<UserToken | null>(null);
   const router = useRouter();
-  console.log(user);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuAnimating, setIsMenuAnimating] = useState(false);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,11 +45,12 @@ const Navbar = () => {
   useEffect(() => {
     const fetchData = async () => {
       const user = await getCurrentUser();
-      setUser(user); // Store the user data
+      setUser(user);
     };
 
     fetchData();
   }, []);
+  console.log(user, "user");
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -97,6 +98,14 @@ const Navbar = () => {
           >
             Premium
           </Link>
+          {user?.role === "USER" && (
+            <Link
+              href="/dashboard"
+              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            >
+              Dashboard
+            </Link>
+          )}
         </div>
 
         {/* Desktop Search & Auth */}
@@ -189,6 +198,15 @@ const Navbar = () => {
             >
               Premium
             </Link>
+            {user?.role === "USER" && (
+              <Link
+                href="/dashboard"
+                className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+                onClick={toggleMenu}
+              >
+                Dashboard
+              </Link>
+            )}
 
             <div className="pt-2 border-t border-gray-100">
               {user ? (

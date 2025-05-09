@@ -58,7 +58,7 @@ const AllPostPage = ({ posts, categoriess }) => {
   const [popularOnly, setPopularOnly] = useState(false); // show only posts with 5+ upvotes
 
   // Filter spots based on search, category, and premium status
-  const filteredSpots = posts.filter((spot) => {
+  const filteredSpots = posts?.filter((spot) => {
     const matchesSearch =
       spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       spot.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -162,7 +162,7 @@ const AllPostPage = ({ posts, categoriess }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8 px-4">
+      <div className=" max-w-7xl mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Food Discoveries Feed
         </h1>
@@ -389,7 +389,7 @@ const AllPostPage = ({ posts, categoriess }) => {
           </div>
 
           {/* Food Spots Grid */}
-          {filteredSpots.length > 0 ? (
+          {filteredSpots?.length > 0 ? (
             <div className="">
               {filteredSpots.map((post) => (
                 <FoodPostCard key={post.id} post={post} />

@@ -50,7 +50,10 @@ const FoodSpotCard = ({
         <Image
           height={400}
           width={400}
-          src={image}
+          src={
+            image ||
+            "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRhY298ZW58MHx8MHx8fDA%3D"
+          }
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />

@@ -100,7 +100,7 @@ const FeaturedSpots = ({ user }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredSpots.map((spot) => (
+          {featuredSpots?.map((spot) => (
             <FoodSpotCard key={spot.id} {...spot} />
           ))}
         </div>
@@ -119,7 +119,8 @@ const FeaturedSpots = ({ user }) => {
             <h2 className="text-2xl md:text-3xl font-bold text-street-dark">
               Premium Spots
             </h2>
-            <span className="premium-gradient text-xs font-bold py-1 px-3 rounded-full animate-pulse-slow">
+            <span className="bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-bold rounded-full shadow-md py-1 px-2">
+              {" "}
               Unlock Now
             </span>
           </div>
@@ -131,13 +132,13 @@ const FeaturedSpots = ({ user }) => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {premiumSpots.map((spot) => (
+            {premiumSpots?.map((spot) => (
               <div key={spot.id} className="relative group overflow-hidden">
                 {/* Show the card normally */}
                 <FoodSpotCard {...spot} className="premium-card" />
 
                 {/* Overlay with blur effect - only covers the card content */}
-                {!user.isPremium && (
+                {!user?.isPremium && (
                   <div className="absolute inset-0 bg-black/30 backdrop-blur-sm group-hover:backdrop-blur-md transition-all duration-300 rounded-lg flex flex-col items-center justify-center">
                     <div className="text-center px-6 py-8 bg-white/10 backdrop-blur rounded-lg max-w-[80%] transform transition-transform duration-300 group-hover:scale-105">
                       <Link href={"/premium"}>

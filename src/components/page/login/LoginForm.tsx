@@ -20,7 +20,7 @@ const LoginForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirectPath");
+  const redirect = searchParams.get("callbackUrl");
   const router = useRouter();
   const { setIsLoading } = useUser();
 
@@ -30,7 +30,7 @@ const LoginForm = () => {
       setIsLoading(true);
       if (res?.success) {
         toast.success(res?.message);
-        if (false) {
+        if (redirect) {
           router.push(redirect);
         } else {
           router.push("/");
