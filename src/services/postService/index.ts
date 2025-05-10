@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export const getAllPost = async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/v1/post/all-retreive-user`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/post/all-retreive-user`,
       {
         method: "GET",
         headers: {
@@ -30,7 +30,7 @@ export const getAllPost = async () => {
 export const getAllPostForAdmin = async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/v1/post/all-retreive-admin`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/post/all-retreive-admin`,
       {
         method: "GET",
         headers: {
