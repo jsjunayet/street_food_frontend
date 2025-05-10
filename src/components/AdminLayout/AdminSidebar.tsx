@@ -62,12 +62,14 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar>
-      <div className="p-4 flex items-center gap-2">
-        <div className="w-8 h-8 rounded-full bg-[#FF6b35]/50 flex items-center justify-center">
-          <span className="text-white font-bold">SG</span>
+      <Link href={"/"}>
+        <div className="p-4 flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-[#FF6b35]/50 flex items-center justify-center">
+            <span className="text-white font-bold">SG</span>
+          </div>
+          <h1 className="text-xl text-[#FF6b35]/90 font-bold">StreetGrub</h1>
         </div>
-        <h1 className="text-xl text-[#FF6b35]/90 font-bold">StreetGrub</h1>
-      </div>
+      </Link>
 
       <SidebarContent>
         <SidebarGroup>

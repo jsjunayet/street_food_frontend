@@ -3,84 +3,19 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import FoodSpotCard from "../foodSpotList/FoodSpotCard";
 
-// Sample featured food spots data
-const featuredSpots = [
-  {
-    id: "1",
-    title: "Street Taco Express",
-    description:
-      "Authentic Mexican street tacos with handmade tortillas and traditional fillings.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRhY298ZW58MHx8MHx8fDA%3D",
-    rating: 4.8,
-    priceRange: "$",
-    category: "Mexican",
-    location: "Downtown Street Market",
-    isPremium: false,
-    votes: { upvotes: 142, downvotes: 12 },
-  },
-  {
-    id: "2",
-    title: "Bangkok Noodle Cart",
-    description:
-      "Traditional Thai pad see ew noodles cooked fresh on a street cart with authentic seasonings.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGhhaSUyMG5vb2RsZXN8ZW58MHx8MHx8fDA%3D",
-    rating: 4.6,
-    priceRange: "$$",
-    category: "Thai",
-    location: "Asian Night Market",
-    isPremium: true,
-    votes: { upvotes: 98, downvotes: 5 },
-  },
-  {
-    id: "3",
-    title: "Curry in a Hurry",
-    description:
-      "Quick and delicious Indian curry served with fresh naan straight from the tandoor.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwY3Vycnl8ZW58MHx8MHx8fDA%3D",
-    rating: 4.5,
-    priceRange: "$$",
-    category: "Indian",
-    location: "Spice Alley",
-    isPremium: false,
-    votes: { upvotes: 76, downvotes: 8 },
-  },
-];
+const FeaturedSpots = ({ user, posts }) => {
+  const safePosts = Array.isArray(posts) ? posts : [];
 
-const premiumSpots = [
-  {
-    id: "4",
-    title: "Dim Sum Delights",
-    description:
-      "Handcrafted dim sum from a multi-generational family recipe, steamed fresh to order.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZGltJTIwc3VtfGVufDB8fDB8fHww",
-    rating: 4.9,
-    priceRange: "$$$",
-    category: "Chinese",
-    location: "Harbor Food Street",
-    isPremium: true,
-    votes: { upvotes: 221, downvotes: 14 },
-  },
-  {
-    id: "5",
-    title: "Artisanal Gelato Cart",
-    description:
-      "Small-batch gelato made with organic ingredients and unique flavor combinations.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z2VsYXRvfGVufDB8fDB8fHww",
-    rating: 4.7,
-    priceRange: "$$",
-    category: "Desserts",
-    location: "Riverside Pier",
-    isPremium: true,
-    votes: { upvotes: 155, downvotes: 18 },
-  },
-];
+  const premiumPosts = safePosts
+    .filter((post) => post.isPremium)
+    .sort((a, b) => b.upVotes - a.upVotes)
+    .slice(0, 2);
 
-const FeaturedSpots = ({ user }) => {
+  const nonPremiumPosts = safePosts
+    .filter((post) => !post.isPremium)
+    .sort((a, b) => b.upVotes - a.upVotes)
+    .slice(0, 3);
+
   return (
     <div className="py-16">
       {/* Regular Featured Spots Section */}
@@ -100,7 +35,7 @@ const FeaturedSpots = ({ user }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredSpots?.map((spot) => (
+          {nonPremiumPosts?.map((spot) => (
             <FoodSpotCard key={spot.id} {...spot} />
           ))}
         </div>
@@ -132,7 +67,7 @@ const FeaturedSpots = ({ user }) => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {premiumSpots?.map((spot) => (
+            {premiumPosts?.map((spot) => (
               <div key={spot.id} className="relative group overflow-hidden">
                 {/* Show the card normally */}
                 <FoodSpotCard {...spot} className="premium-card" />

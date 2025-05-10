@@ -7,13 +7,16 @@ import { FieldValues } from "react-hook-form";
 export const SignUpUser = async (userData: FieldValues) => {
   console.log(userData);
   try {
-    const res = await fetch(`http://127.0.0.1:5000/api/v1/user/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
     const result = await res.json();
     console.log(result);
     // if (result.success) {
@@ -56,7 +59,7 @@ export const loginUser = async (userData: FieldValues) => {
 export const verifyUser = async (id) => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/v1/user/verify?order_id=${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/verify?order_id=${id}`,
       {
         method: "GET",
         headers: {
@@ -103,16 +106,21 @@ export const premiumUser = async (userData: FormData): Promise<any> => {
 };
 export const subscription = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/api/v1/user/subscription`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${(await cookies()).get("accessToken")!.value}`,
-        "Content-Type": "application/json",
-      },
-      next: {
-        tags: ["loginUser"],
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/subscription`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${
+            (await cookies()).get("accessToken")!.value
+          }`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["loginUser"],
+        },
+      }
+    );
 
     const data = await res.json();
     return data;
@@ -123,7 +131,7 @@ export const subscription = async () => {
 export const singleUserget = async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/v1/user/single-retreive`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/single-retreive`,
       {
         method: "GET",
         headers: {

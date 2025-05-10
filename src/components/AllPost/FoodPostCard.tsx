@@ -197,7 +197,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
   };
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden mt-4">
       <CardHeader className="pb-3">
         <div className="md:flex justify-between items-start">
           <div className="flex items-center justify-center md:justify-normal gap-4">

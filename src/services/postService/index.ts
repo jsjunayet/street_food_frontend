@@ -27,6 +27,24 @@ export const getAllPost = async () => {
     return Error(error.message);
   }
 };
+export const getAllPostForGest = async () => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post/gest`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      next: {
+        tags: ["post"], // Optional Next.js cache control
+      },
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error: any) {
+    return Error(error.message);
+  }
+};
 export const getAllPostForAdmin = async () => {
   try {
     const res = await fetch(

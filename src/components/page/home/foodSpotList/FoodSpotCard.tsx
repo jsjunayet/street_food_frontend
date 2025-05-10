@@ -8,7 +8,7 @@ interface FoodSpotCardProps {
   description: string;
   image: string;
   averageRating: number;
-  priceRange: string;
+  price: string;
   category: string[];
   location: string;
   isPremium?: boolean;
@@ -24,7 +24,7 @@ const FoodSpotCard = ({
   description,
   image,
   averageRating,
-  priceRange,
+  price,
   category,
   location,
   isPremium,
@@ -60,10 +60,10 @@ const FoodSpotCard = ({
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent h-16"></div>
         <div className="absolute bottom-2 left-3 flex items-center gap-1">
           <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
-            {category["name"]}
+            {category.name}
           </div>
-          <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
-            {priceRange}
+          <div className="bg-yellow-500/90 rounded-full px-2 py-1 text-xs font-medium">
+            {price} $
           </div>
         </div>
       </div>

@@ -9,23 +9,6 @@ import { toast } from "sonner";
 
 const Comments = ({ Postcomments }) => {
   const [searchQuery, setSearchQuery] = useState("");
-
-  // // Load comments from backend data
-  // useEffect(() => {
-  //   // In a real app, these would be API calls
-  //   const transformedComments = transformComments(
-  //     backendCommentsData.data,
-  //     backendUsersData.data,
-  //     backendPostsData.data
-  //   );
-  //   setComments(transformedComments);
-  // }, []);
-
-  // const handleApprove = (id: string) => {
-  //   setApprovedComments([...approvedComments, id]);
-  //   setDeletedComments(deletedComments.filter((commentId) => commentId !== id));
-  // };
-
   const handleDelete = async (id: string) => {
     await deletedComment(id);
     toast.error("Comment deleted");
@@ -35,31 +18,6 @@ const Comments = ({ Postcomments }) => {
     await updateComment(id, commentText);
     toast.success("Comment updated");
   };
-
-  // Filter comments based on search query
-  // const comments = searchQuery
-  //   ? comments?.filter(
-  //       (comment) =>
-  //         comment.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //         comment.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //         (comment.postTitle &&
-  //           comment.postTitle.toLowerCase().includes(searchQuery.toLowerCase()))
-  //     )
-  //   : comments;
-
-  // const pendingComments = comments.filter(
-  //   (comment) =>
-  //     !approvedComments.includes(comment.id) &&
-  //     !deletedComments.includes(comment.id)
-  // );
-
-  // const approvedCommentsList = comments.filter((comment) =>
-  //   approvedComments.includes(comment.id)
-  // );
-
-  // const deletedCommentsList = comments.filter((comment) =>
-  //   deletedComments.includes(comment.id)
-  // );
 
   return (
     <div>

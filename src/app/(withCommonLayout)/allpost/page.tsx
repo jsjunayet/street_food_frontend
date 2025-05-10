@@ -7,7 +7,7 @@ const AllProudct = async () => {
   const { data: Categories } = await getAllcategory();
   return (
     <div>
-      <AllPostPage posts={data} categories={Categories} />
+      <AllPostPage posts={data} categoriess={Categories} />
     </div>
   );
 };

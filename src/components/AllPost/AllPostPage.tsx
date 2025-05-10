@@ -28,16 +28,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import FoodPostCard from "./FoodPostCard";
-const categories = [
-  "All",
-  "Mexican",
-  "Thai",
-  "Indian",
-  "Chinese",
-  "Italian",
-  "Japanese",
-  "American",
-];
+
 const AllPostPage = ({ posts, categoriess }) => {
   const { user } = useUser();
   const [title, setTitle] = useState("");
@@ -48,40 +39,14 @@ const AllPostPage = ({ posts, categoriess }) => {
   const [imagePreviewUrls, setImagePreviewUrls] = useState([]);
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const [price, setPrice] = useState("");
-  // const [selectedCategory, setSelectedCategory] = useState("");
-
   const fileInputRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("All");
   const [showPremium, setShowPremium] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]); // min and max prices
-  const [popularOnly, setPopularOnly] = useState(false); // show only posts with 5+ upvotes
-
-  // Filter spots based on search, category, and premium status
-  const filteredSpots = posts?.filter((spot) => {
-    const matchesSearch =
-      spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      spot.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "All" || spot.category === selectedCategory;
-
-    const matchesPremium = showPremium ? spot.isPremium : true;
-
-    const matchesPrice =
-      !spot.price ||
-      (spot.price >= priceRange[0] && spot.price <= priceRange[1]);
-
-    const matchesPopularity = popularOnly ? (spot.upVotes || 0) >= 5 : true;
-
-    return (
-      matchesSearch &&
-      matchesCategory &&
-      matchesPremium &&
-      matchesPrice &&
-      matchesPopularity
-    );
-  });
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [popularOnly, setPopularOnly] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const handleFileSelect = (e) => {
     const filesArray = Array.from(e.target.files);
@@ -133,6 +98,7 @@ const AllPostPage = ({ posts, categoriess }) => {
   };
 
   const handleCreatePost = async () => {
+    setloading(true);
     const uploadedUrls = await uploadImagesToCloudinary(selectedFiles);
 
     const payload = {
@@ -143,26 +109,55 @@ const AllPostPage = ({ posts, categoriess }) => {
       image:
         uploadedUrls[0] ||
         "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300",
-      categoryId: selectedCategory,
+      categoryId: selectedCategoryId,
     };
-    console.log(payload);
 
     const res = await createPost(payload);
-    console.log(res);
-    toast.success("Post created!");
-    setTitle("");
-    setNewPostContent("");
-    setPrice("");
-    setNewPostLocation("");
-    setSelectedCategory("");
-    setSelectedFiles([]);
-    setImagePreviewUrls([]);
-    // Optionally reset form
+    if (res.success) {
+      toast.success("Post created!");
+      setloading(false);
+      setTitle("");
+      setNewPostContent("");
+      setPrice("");
+      setNewPostLocation("");
+      setSelectedCategoryId("");
+      setSelectedFiles([]);
+      setImagePreviewUrls([]);
+    } else {
+      setloading(false);
+    }
   };
+
+  const filteredSpots = posts?.filter((spot) => {
+    const matchesSearch =
+      spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      spot.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedFilter === "All"
+        ? true
+        : selectedFilter === "Others"
+        ? !categoriess.some((cat) => cat.id === spot.categoryId)
+        : spot.categoryId === selectedFilter;
+
+    const matchesPremium = showPremium ? spot.isPremium : true;
+    const matchesPrice =
+      !spot.price ||
+      (spot.price >= priceRange[0] && spot.price <= priceRange[1]);
+    const matchesPopularity = popularOnly ? (spot.upVotes || 0) >= 5 : true;
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesPremium &&
+      matchesPrice &&
+      matchesPopularity
+    );
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className=" max-w-7xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Food Discoveries Feed
         </h1>
@@ -193,14 +188,12 @@ const AllPostPage = ({ posts, categoriess }) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-
             <Textarea
               className="mb-4"
               placeholder="Describe the food you discovered..."
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
             />
-
             <Input
               className="mb-4"
               type="number"
@@ -209,18 +202,15 @@ const AllPostPage = ({ posts, categoriess }) => {
               onChange={(e) => setPrice(e.target.value)}
             />
 
-            {/* shadcn Select */}
-
             <Select
-              className=" "
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
+              value={selectedCategoryId}
+              onValueChange={setSelectedCategoryId}
             >
               <SelectTrigger className="mb-4 w-full">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
+                {categoriess?.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id}>
                     {cat.name}
                   </SelectItem>
@@ -228,7 +218,6 @@ const AllPostPage = ({ posts, categoriess }) => {
               </SelectContent>
             </Select>
 
-            {/* Image Previews */}
             {imagePreviewUrls.length > 0 && (
               <div className="mb-4 grid grid-cols-2 gap-2">
                 {imagePreviewUrls.map((url, index) => (
@@ -262,7 +251,6 @@ const AllPostPage = ({ posts, categoriess }) => {
             )}
 
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
-              {/* Button group */}
               <div className="flex flex-wrap gap-2">
                 <Input
                   type="file"
@@ -296,123 +284,101 @@ const AllPostPage = ({ posts, categoriess }) => {
                 </Button>
               </div>
 
-              {/* Post button */}
               <div className="self-end sm:self-auto">
                 <Button
                   className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   onClick={handleCreatePost}
                   disabled={!title.trim() || !newPostContent.trim()}
                 >
-                  Post
+                  {loading ? "Posting...." : "Post"}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Filtering Post Card */}
-        <div className="mt-8 ">
-          {/* Search and Filters */}
-          <div className="mb-6 space-y-4 bg-[#FFFFFF] p-6 rounded-lg border">
-            {/* Search bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Search for street food..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6b35]"
-              />
-            </div>
-
-            {/* Category filters */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  variant={
-                    selectedCategory === category ? "default" : "outline"
-                  }
-                  className={
-                    selectedCategory === category
-                      ? "bg-[#FF6b35] hover:bg-[#FF6b35]/90"
-                      : "text-gray-700 border-gray-300"
-                  }
-                  size="sm"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-            <div>
-              <div className=" space-x-4">
-                <label className="text-sm">Price Range:</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="1000"
-                  value={priceRange[1]}
-                  onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                  className="w-full"
-                />
-                <span>
-                  ${priceRange[0]} - ${priceRange[1]}
-                </span>
-              </div>
-
-              <div className="flex gap-2 mt-2">
-                <Button
-                  variant={popularOnly ? "default" : "outline"}
-                  onClick={() => setPopularOnly(!popularOnly)}
-                  size="sm"
-                >
-                  🔥 Popular Only 5+
-                </Button>
-
-                <Button
-                  onClick={() => setShowPremium(!showPremium)}
-                  variant={showPremium ? "default" : "outline"}
-                  className={`ml-auto ${
-                    showPremium
-                      ? "bg-[#FFC15E] text-black hover:bg-[#FFC15E]/90"
-                      : "text-gray-700 border-gray-300"
-                  }`}
-                  size="sm"
-                >
-                  <Filter className="w-4 h-4 mr-1" />
-                  Premium Only
-                </Button>
-              </div>
-            </div>
+        {/* Filter Bar */}
+        <div className="mb-6 space-y-4 bg-white p-6 rounded-lg border">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search for food..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
+            />
           </div>
 
-          {/* Food Spots Grid */}
-          {filteredSpots?.length > 0 ? (
-            <div className="">
-              {filteredSpots.map((post) => (
-                <FoodPostCard key={post.id} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900">
-                No food spots found
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Try adjusting your search or filter criteria.
-              </p>
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => setSelectedFilter("All")}
+              variant={selectedFilter === "All" ? "default" : "outline"}
+            >
+              All
+            </Button>
+            {categoriess?.map((cat) => (
+              <Button
+                key={cat.id}
+                onClick={() => setSelectedFilter(cat.id)}
+                variant={selectedFilter === cat.id ? "default" : "outline"}
+              >
+                {cat.name}
+              </Button>
+            ))}
+          </div>
+
+          <div>
+            <label className="text-sm">Price Range:</label>
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              value={priceRange[1]}
+              onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+              className="w-full"
+            />
+            <span>
+              ${priceRange[0]} - ${priceRange[1]}
+            </span>
+          </div>
+
+          <div className="flex gap-2 mt-2">
+            <Button
+              variant={popularOnly ? "default" : "outline"}
+              onClick={() => setPopularOnly(!popularOnly)}
+              size="sm"
+            >
+              🔥 Popular Only 5+
+            </Button>
+            <Button
+              onClick={() => setShowPremium(!showPremium)}
+              variant={showPremium ? "default" : "outline"}
+              size="sm"
+            >
+              <Filter className="w-4 h-4 mr-1" />
+              Premium Only
+            </Button>
+          </div>
         </div>
 
-        {/* Post Feed */}
-        {/* <div className="space-y-6">
-          {posts?.map((post) => (
-            <FoodPostCard key={post.id} post={post} />
-          ))}
-        </div> */}
+        {/* Posts Feed */}
+        {filteredSpots?.length > 0 ? (
+          <div className="space-y-6">
+            {filteredSpots.map((post) => (
+              <FoodPostCard key={post.id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium text-gray-900">
+              No food spots found
+            </h3>
+            <p className="mt-2 text-sm text-gray-500">
+              Try adjusting your search or filter criteria.
+            </p>
+          </div>
+        )}
 
         {/* Manual Location Dialog */}
         <Dialog open={locationDialogOpen} onOpenChange={setLocationDialogOpen}>
@@ -420,14 +386,13 @@ const AllPostPage = ({ posts, categoriess }) => {
             <DialogHeader>
               <DialogTitle>Enter Your Location</DialogTitle>
               <DialogDescription>
-                We couldn't detect your location automatically. Please enter it
-                manually.
+                Couldn't detect location. Please enter manually.
               </DialogDescription>
             </DialogHeader>
             <Input
               value={newPostLocation}
               onChange={(e) => setNewPostLocation(e.target.value)}
-              placeholder="e.g. Downtown Market, Dhaka"
+              placeholder="e.g. New Market, Dhaka"
             />
             <DialogFooter>
               <Button onClick={() => setLocationDialogOpen(false)}>Done</Button>

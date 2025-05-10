@@ -3,15 +3,17 @@ import GoPremium from "@/components/page/home/GoPremium";
 import FeaturedSpots from "@/components/page/home/hero/FeatureSport";
 import HeroSection from "@/components/page/home/hero/Hero";
 import { singleUserget } from "@/services/AuthService";
+import { getAllPostForGest } from "@/services/postService";
 
 export default async function Home() {
   const res = await singleUserget();
+  const Post = await getAllPostForGest();
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         <HeroSection />
         <div className=" max-w-7xl mx-auto py-12">
-          <FeaturedSpots user={res.data} />
+          <FeaturedSpots posts={Post?.data} user={res.data} />
           <Category />
           {/* <FoodSpotList /> */}
           <GoPremium />

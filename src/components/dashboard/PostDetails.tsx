@@ -9,7 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Check, Download, MessageSquare, Star, X } from "lucide-react";
+import { Check, MessageSquare, Star, X } from "lucide-react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -39,6 +40,8 @@ export type PostDetailProps = {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onPremiumToggle: (id: string, isPremium: boolean) => void;
+  onEditComment: (id: string, newContent: string) => void;
+  onDeleteComment: (id: string) => void;
 };
 
 const PostDetail: React.FC<PostDetailProps> = ({
@@ -49,17 +52,19 @@ const PostDetail: React.FC<PostDetailProps> = ({
   onApprove,
   onReject,
   onPremiumToggle,
+  onDeleteComment,
+  onEditComment,
 }) => {
   const [activeTab, setActiveTab] = useState<string>("content");
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editedText, setEditedText] = useState<string>("");
 
   const handleApprove = () => {
     onApprove(post.id);
-    toast.success("Post approved successfully");
   };
 
   const handleReject = () => {
     onReject(post.id);
-    toast.error("Post rejected");
   };
 
   const handlePremiumToggle = () => {
@@ -67,11 +72,6 @@ const PostDetail: React.FC<PostDetailProps> = ({
     toast.info(
       `Post ${!post.isPremium ? "marked as premium" : "removed from premium"}`
     );
-  };
-
-  const handleDownloadReport = () => {
-    toast.success("Report downloaded successfully");
-    // In a real app, this would trigger a file download
   };
 
   const getStatusBadge = () => {
@@ -152,7 +152,6 @@ const PostDetail: React.FC<PostDetailProps> = ({
                   {comments.length}
                 </span>
               </TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
             </TabsList>
 
             <div
@@ -164,7 +163,9 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 className="mt-0 p-4 border rounded-md h-full"
               >
                 <div className="aspect-video mb-4">
-                  <img
+                  <Image
+                    height={500}
+                    width={500}
                     src={post.imageUrl}
                     alt={post.title}
                     className="w-full h-full object-cover rounded-md"
@@ -176,34 +177,78 @@ const PostDetail: React.FC<PostDetailProps> = ({
 
                 <p className="text-lg font-medium mb-2">Full Content:</p>
                 <p>
-                  {post.content ||
+                  {post.description ||
                     "This is a placeholder for the full content of the post. In a real application, this would contain the complete article text with formatting."}
                 </p>
               </TabsContent>
 
-              <TabsContent value="comments" className="mt-0 space-y-4 h-full">
+              <TabsContent
+                value="comments"
+                className="mt-0 h-[200px] overflow-y-auto space-y-4 pr-2"
+              >
                 {comments.length > 0 ? (
                   comments.map((comment) => (
                     <Card key={comment.id} className="border">
                       <CardContent className="pt-4">
                         <div className="flex justify-between items-start mb-2">
-                          <span className="font-medium">{comment.author}</span>
+                          <span className="font-medium">
+                            {comment?.user?.email}
+                          </span>
                           <span className="text-xs text-muted-foreground">
-                            {comment.date}
+                            {new Date(comment.createdAt).toLocaleString()}
                           </span>
                         </div>
-                        <p className="text-sm">{comment.content}</p>
-                        <div className="flex gap-2 mt-4">
-                          <Button variant="outline" size="sm">
-                            Flag
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Delete
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                        </div>
+                        {editingCommentId === comment.id ? (
+                          <div className="space-y-2">
+                            <textarea
+                              value={editedText}
+                              onChange={(e) => setEditedText(e.target.value)}
+                              className="w-full border rounded-md p-2 text-sm"
+                              rows={3}
+                            />
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => {
+                                  onEditComment(comment.id, editedText);
+                                  setEditingCommentId(null);
+                                }}
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditingCommentId(null)}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-sm">{comment.commentText}</p>
+                            <div className="flex gap-2 mt-4">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingCommentId(comment.id);
+                                  setEditedText(comment.commentText);
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => onDeleteComment(comment.id)}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </>
+                        )}
                       </CardContent>
                     </Card>
                   ))
@@ -213,61 +258,6 @@ const PostDetail: React.FC<PostDetailProps> = ({
                     <p>No comments for this post</p>
                   </div>
                 )}
-              </TabsContent>
-
-              <TabsContent
-                value="reports"
-                className="mt-0 p-6 space-y-6 h-full"
-              >
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Available Reports</h3>
-                  <Button
-                    variant="outline"
-                    onClick={handleDownloadReport}
-                    className="flex items-center gap-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download All
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="border p-4 rounded-md flex justify-between items-center hover:bg-muted/50 cursor-pointer">
-                    <div>
-                      <p className="font-medium">Post Engagement Report</p>
-                      <p className="text-sm text-muted-foreground">
-                        Views, likes, shares, and reading time
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="border p-4 rounded-md flex justify-between items-center hover:bg-muted/50 cursor-pointer">
-                    <div>
-                      <p className="font-medium">Comment Analysis</p>
-                      <p className="text-sm text-muted-foreground">
-                        Sentiment and moderation data
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="border p-4 rounded-md flex justify-between items-center hover:bg-muted/50 cursor-pointer">
-                    <div>
-                      <p className="font-medium">Content Quality Score</p>
-                      <p className="text-sm text-muted-foreground">
-                        Readability and SEO metrics
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
               </TabsContent>
             </div>
           </Tabs>

@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export const getAllcategory = async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/v1/category/all-retreive`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/category/all-retreive`,
       {
         method: "GET",
         headers: {

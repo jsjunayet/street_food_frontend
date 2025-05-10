@@ -1,7 +1,6 @@
 "use client";
 import PostCard from "@/components/dashboard/PostCard";
 import PostDetail from "@/components/dashboard/PostDetails";
-import { mockComments } from "@/components/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,109 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { deletedComment, updateComment } from "@/services/commentservice";
 import { postAprroved, premiumAprroved } from "@/services/postService";
 import { Post, PostStatus } from "@/types";
 import { Download, Filter, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-// This is the backend data format
-const backendPostsData = {
-  success: true,
-  message: "All post retrieve successfully",
-  data: [
-    {
-      id: "38a88234-1042-400a-8ce1-61a138907a9a",
-      title: "Spicy Jhalmuri at Dhanmondi",
-      description:
-        "This Jhalmuri has the perfect blend of spices and tangy flavors.",
-      location: "Dhanmondi 27, Dhaka",
-      price: 30,
-      image: "https://i.ibb.co/jMxrDvt/jhalmuri.jpg",
-      categoryId: "dafafa71-242c-415d-b0db-622decc12d4d",
-      isPremium: false,
-      approved: false,
-      status: "approved",
-      createdAt: "2025-05-08T19:01:44.746Z",
-      updatedAt: "2025-05-02T05:02:03.430Z",
-      userId: "2e2b4627-2792-418e-b337-20cc5735e236",
-    },
-    {
-      id: "b39606c3-d908-472b-8ea5-3eb705e0f9b4",
-      title: "Spicy Jhalmuri at Dhanmondi",
-      description:
-        "This Jhalmuri has the perfect blend of spices and tangy flavors.",
-      location: "Dhanmondi 27, Dhaka",
-      price: 30,
-      image: "https://i.ibb.co/jMxrDvt/jhalmuri.jpg",
-      categoryId: "dafafa71-242c-415d-b0db-622decc12d4d",
-      isPremium: true,
-      approved: true,
-      status: "approved",
-      createdAt: "2025-05-08T19:01:44.746Z",
-      updatedAt: "2025-05-02T05:04:52.169Z",
-      userId: "95b7ef99-c6c4-485c-91b2-0100f264de13",
-    },
-    {
-      id: "684cacb2-c725-4d94-99fb-ca1e374cced7",
-      title: "Spicy Jhalmuri at Dhanmondi",
-      description:
-        "This Jhalmuri has the perfect blend of spices and tangy flavors.",
-      location: "Dhanmondi 27, Dhaka",
-      price: 30,
-      image: "https://i.ibb.co/jMxrDvt/jhalmuri.jpg",
-      categoryId: "dafafa71-242c-415d-b0db-622decc12d4d",
-      isPremium: false,
-      approved: true,
-      status: "rejected",
-      createdAt: "2025-05-08T19:01:44.746Z",
-      updatedAt: "2025-05-09T13:54:39.226Z",
-      userId: "2e2b4627-2792-418e-b337-20cc5735e236",
-    },
-    {
-      id: "684cacb2-c725-4d94-99fb-ca1e374cced7",
-      title: "Spicy Jhalmuri at Dhanmondi",
-      description:
-        "This Jhalmuri has the perfect blend of spices and tangy flavors.",
-      location: "Dhanmondi 27, Dhaka",
-      price: 30,
-      image: "https://i.ibb.co/jMxrDvt/jhalmuri.jpg",
-      categoryId: "dafafa71-242c-415d-b0db-622decc12d4d",
-      isPremium: false,
-      approved: true,
-      status: "rejected",
-      createdAt: "2025-05-08T19:01:44.746Z",
-      updatedAt: "2025-05-09T13:54:39.226Z",
-      userId: "2e2b4627-2792-418e-b337-20cc5735e236",
-    },
-  ],
-};
-
-// Function to transform backend posts to our frontend format
-const transformPosts = (backendPosts: any[]): Post[] => {
-  return backendPosts.map((post) => ({
-    id: post.id,
-    title: post.title,
-    author: "User " + post.userId.substring(0, 5), // Generate a placeholder author name
-    category: "Food", // Default category since we don't have category name
-    imageUrl: post.image,
-    excerpt: post.description,
-    status: post.status as PostStatus,
-    isPremium: post.isPremium,
-    date: new Date(post.createdAt).toLocaleDateString(),
-    content: post.description,
-    // Additional fields from backend
-    description: post.description,
-    location: post.location,
-    price: post.price,
-    categoryId: post.categoryId,
-    approved: post.approved,
-    userId: post.userId,
-  }));
-};
-
-const Posts = ({ allposts }) => {
-  console.log(allposts);
+const Posts = ({ allposts, comment }) => {
   const [posts, setPosts] = useState<Post[]>(allposts);
   const [selectedTab, setSelectedTab] = useState<"all" | PostStatus>("all");
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -122,11 +26,11 @@ const Posts = ({ allposts }) => {
     await postAprroved(id, status);
   };
 
-  const handlePremiumToggle = async (id: string, isPremium: boolean) => {
+  const handlePremiumToggle = async (id: string) => {
     await premiumAprroved(id);
   };
 
-  const filteredPosts = posts.filter((post) => {
+  const filteredPosts = posts?.filter((post) => {
     if (selectedTab === "all") return true;
     return post.status === selectedTab;
   });
@@ -134,19 +38,22 @@ const Posts = ({ allposts }) => {
   const selectedPost = selectedPostId
     ? posts.find((post) => post.id === selectedPostId)
     : null;
-
-  const postComments = selectedPostId
-    ? mockComments
-        .filter((comment) => comment.postTitle === selectedPost?.title)
-        .slice(0, 3)
-    : [];
-
-  const handleDownloadReport = () => {
-    toast.success("Posts report downloaded successfully");
-  };
+  console.log(selectedPost);
+  const postComments = selectedPost?.comments || [];
+  // console.log(postComments);
 
   const openPostDetail = (id: string) => {
     setSelectedPostId(id);
+  };
+  const handleEditComment = async (id: string, commentText: string) => {
+    const res = await updateComment(id, commentText);
+    console.log(res, id);
+    toast.success("Comment updated");
+  };
+  const handleDeleteComment = async (id: string) => {
+    const res = await deletedComment(id);
+    console.log(res, id);
+    toast.error("Comment deleted");
   };
 
   return (
@@ -163,7 +70,6 @@ const Posts = ({ allposts }) => {
           <Button
             variant="outline"
             className="flex items-center gap-2 self-start"
-            onClick={handleDownloadReport}
           >
             <Download className="h-4 w-4" />
             Download Report
@@ -298,6 +204,8 @@ const Posts = ({ allposts }) => {
           onApprove={(id) => handleStatusChange(id, "approved")}
           onReject={(id) => handleStatusChange(id, "rejected")}
           onPremiumToggle={handlePremiumToggle}
+          onDeleteComment={handleDeleteComment}
+          onEditComment={handleEditComment}
         />
       )}
     </div>
