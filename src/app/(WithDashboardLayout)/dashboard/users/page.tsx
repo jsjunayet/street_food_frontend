@@ -1,9 +1,11 @@
 import Users from "@/components/page/Dashbaord/Users";
+import { getAllusers } from "@/services/userService";
 
-const User = () => {
+const User = async () => {
+  const result = await getAllusers();
   return (
     <div>
-      <Users />
+      <Users users={result?.data} />
     </div>
   );
 };

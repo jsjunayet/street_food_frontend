@@ -1,3 +1,7 @@
+"use server";
+import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
+
 export const getAllusers = async () => {
   try {
     const res = await fetch(
@@ -43,7 +47,7 @@ export const deletedUser = async (id: string): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
-export const roleUpate = async (id: string): Promise<any> => {
+export const roleUpate = async (id: string, role): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {
@@ -55,6 +59,7 @@ export const roleUpate = async (id: string): Promise<any> => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ role }),
       }
     );
     const result = await res.json();

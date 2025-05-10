@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/table";
 import { User, UserRole } from "@/types";
 import { ChevronDown, Edit, Star, Trash } from "lucide-react";
+import Image from "next/image";
 import React from "react";
-import { toast } from "sonner";
 
 interface UserTableProps {
   users: User[];
@@ -28,31 +28,19 @@ interface UserTableProps {
 
 const UserTable: React.FC<UserTableProps> = ({
   users,
-  onStatusChange,
+
   onDeleteUser,
   onUpdateRole,
 }) => {
-  const handleStatusChange = (
-    userId: string,
-    currentStatus: "active" | "suspended"
-  ) => {
-    const newStatus = currentStatus === "active" ? "suspended" : "active";
-    onStatusChange(userId, newStatus);
-
-    toast(`User ${newStatus === "active" ? "activated" : "suspended"}`);
-  };
-
   const handleDeleteUser = (userId: string) => {
     if (onDeleteUser) {
       onDeleteUser(userId);
-      toast.error("User deleted");
     }
   };
 
   const handleUpdateRole = (userId: string, newRole: UserRole) => {
     if (onUpdateRole) {
       onUpdateRole(userId, newRole);
-      toast.success(`User role updated to ${newRole}`);
     }
   };
 
@@ -83,7 +71,7 @@ const UserTable: React.FC<UserTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user) => {
+          {users?.map((user) => {
             // Determine user status based on data
             const userStatus = user.status || "active";
 
@@ -93,7 +81,9 @@ const UserTable: React.FC<UserTableProps> = ({
                   <div className="flex items-center gap-3">
                     {user.image ? (
                       <div className="h-10 w-10 rounded-full overflow-hidden">
-                        <img
+                        <Image
+                          height={100}
+                          width={100}
                           src={user.image}
                           alt={user.name || user.email}
                           className="h-full w-full object-cover"
@@ -151,19 +141,6 @@ const UserTable: React.FC<UserTableProps> = ({
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        handleStatusChange(
-                          user.id,
-                          userStatus as "active" | "suspended"
-                        )
-                      }
-                    >
-                      {userStatus === "active" ? "Suspend" : "Activate"}
-                    </Button>
-
                     {onUpdateRole && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -183,11 +160,6 @@ const UserTable: React.FC<UserTableProps> = ({
                             onClick={() => handleUpdateRole(user.id, "ADMIN")}
                           >
                             Admin
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleUpdateRole(user.id, "premium")}
-                          >
-                            Premium User
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

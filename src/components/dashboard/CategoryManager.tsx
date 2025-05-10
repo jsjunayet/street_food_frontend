@@ -1,15 +1,13 @@
-import { Badge } from "@/components/ui/badge";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  createCategory,
+  deletedCategory,
+  updateCategory,
+} from "@/services/categoryservice";
 import { Edit, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -28,31 +26,40 @@ interface CategoryManagerProps {
 const CategoryManager: React.FC<CategoryManagerProps> = ({
   initialCategories,
 }) => {
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [newCategory, setNewCategory] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const handleAddCategory = () => {
-    if (!newCategory.trim()) {
-      toast.error("Category name cannot be empty");
-      return;
+  const handleSubmit = async () => {
+    if (!categoryName.trim()) return;
+
+    if (editingId) {
+      console.log(editingId);
+      const res = await updateCategory(editingId, categoryName);
+      console.log(res);
+    } else {
+      await createCategory(categoryName);
     }
 
-    const slug = newCategory.toLowerCase().replace(/\s+/g, "-");
-    const newCategoryItem: Category = {
-      id: Date.now().toString(),
-      name: newCategory,
-      slug,
-      count: 0,
-    };
-
-    setCategories([...categories, newCategoryItem]);
-    setNewCategory("");
-    toast.success("Category added successfully");
+    setCategoryName("");
+    setEditingId(null);
   };
 
-  const handleDeleteCategory = (id: string) => {
-    setCategories(categories.filter((category) => category.id !== id));
-    toast.success("Category deleted successfully");
+  const handleEdit = (id: string, name: string) => {
+    setEditingId(id);
+    setCategoryName(name);
+  };
+
+  const handleDelete = async (id: string) => {
+    const res = await deletedCategory(id);
+    if (res.success) {
+      toast.success("User deleted");
+    } else {
+      toast.error(`${res.data.meta.constraint}` || "Something is Wrong");
+    }
+    if (editingId === id) {
+      setEditingId(null);
+      setCategoryName("");
+    }
   };
 
   return (
@@ -63,51 +70,53 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
       <CardContent>
         <div className="flex gap-3 mb-6">
           <Input
-            placeholder="New category name..."
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
+            placeholder="Category name..."
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
             className="max-w-sm"
           />
-          <Button onClick={handleAddCategory}>Add Category</Button>
+          <Button onClick={handleSubmit}>
+            {editingId ? "Update Category" : "Add Category"}
+          </Button>
         </div>
 
         <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Posts</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell>{category.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{category.slug}</Badge>
-                  </TableCell>
-                  <TableCell>{category.count}</TableCell>
-                  <TableCell>
+          <table className="w-full text-sm">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-2">Name</th>
+                <th className="text-left px-4 py-2">Posts</th>
+                <th className="text-left px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {initialCategories?.map((category) => (
+                <tr key={category.id}>
+                  <td className="px-4 py-2">{category.name}</td>
+                  <td className="px-4 py-2">{category?._count.posts}</td>
+                  <td className="px-4 py-2">
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEdit(category.id, category.name)}
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-red-500"
-                        onClick={() => handleDeleteCategory(category.id)}
+                        className="text-red-500"
+                        onClick={() => handleDelete(category.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </CardContent>
     </Card>

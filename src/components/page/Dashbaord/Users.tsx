@@ -2,9 +2,11 @@
 import UserTable from "@/components/dashboard/UserTable";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { deletedUser, roleUpate } from "@/services/userService";
 import { User, UserRole, UserStatus } from "@/types";
-import { Search, Star, User as UserIcon, UserX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Search, ShieldCheck, Star, User as UserIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 // Backend user data
 const backendUsersData = {
@@ -47,31 +49,23 @@ const transformUsers = (backendUsers: any[]): User[] => {
   }));
 };
 
-const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
+const Users = ({ users }) => {
+  console.log(users);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Load users from backend data
-  useEffect(() => {
-    // In a real app, this would be an API call
-    const transformedUsers = transformUsers(backendUsersData.data);
-    setUsers(transformedUsers);
-  }, []);
-
-  const handleStatusChange = (id: string, status: UserStatus) => {
-    setUsers(
-      users.map((user) => (user.id === id ? { ...user, status } : user))
-    );
+  const handleDeleteUser = async (id: string) => {
+    const res = await deletedUser(id);
+    if (res.success) {
+      toast.success("User deleted");
+    } else {
+      toast.error(`${res.data.meta.constraint}` || "Something is Wrong");
+    }
   };
 
-  const handleDeleteUser = (id: string) => {
-    // In a real app, you would call an API to delete the user
-    setUsers(users.filter((user) => user.id !== id));
-  };
-
-  const handleUpdateRole = (id: string, role: UserRole) => {
-    // In a real app, you would call an API to update the role
-    setUsers(users.map((user) => (user.id === id ? { ...user, role } : user)));
+  const handleUpdateRole = async (id: string, role: UserRole) => {
+    const res = await roleUpate(id, role);
+    console.log(res, "role");
+    toast.success(`User role updated to ${role}`);
   };
 
   // Filter users based on search query
@@ -84,13 +78,9 @@ const Users = () => {
       )
     : users;
 
-  const activeUsers = filteredUsers.filter(
-    (user) => !user.status || user.status === "active"
-  );
-  const suspendedUsers = filteredUsers.filter(
-    (user) => user.status === "suspended"
-  );
-  const premiumUsers = filteredUsers.filter((user) => user.isPremium);
+  const premiumUsers = filteredUsers?.filter((user) => user.isPremium);
+  const AdminUsers = filteredUsers?.filter((user) => user.role === "ADMIN");
+  const NormalUser = filteredUsers?.filter((user) => user.role === "USER");
 
   return (
     <div>
@@ -118,27 +108,26 @@ const Users = () => {
               <UserIcon className="h-4 w-4" />
               All Users
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {filteredUsers.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="active" className="flex items-center gap-1">
-              Active
-              <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {activeUsers.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="suspended" className="flex items-center gap-1">
-              <UserX className="h-4 w-4" />
-              Suspended
-              <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {suspendedUsers.length}
+                {filteredUsers?.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="premium" className="flex items-center gap-1">
               <Star className="h-4 w-4" />
               Premium
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {premiumUsers.length}
+                {premiumUsers?.length}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="admin" className="flex items-center gap-1">
+              <ShieldCheck className="h-4 w-4" /> ADMIN
+              <span className="ml-1 text-xs bg-muted rounded-full px-2">
+                {AdminUsers?.length}
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="user" className="flex items-center gap-1">
+              <UserIcon className="h-4 w-4" /> USER
+              <span className="ml-1 text-xs bg-muted rounded-full px-2">
+                {NormalUser?.length}
               </span>
             </TabsTrigger>
           </TabsList>
@@ -146,25 +135,6 @@ const Users = () => {
           <TabsContent value="all" className="mt-6">
             <UserTable
               users={filteredUsers}
-              onStatusChange={handleStatusChange}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
-          </TabsContent>
-
-          <TabsContent value="active" className="mt-6">
-            <UserTable
-              users={activeUsers}
-              onStatusChange={handleStatusChange}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
-          </TabsContent>
-
-          <TabsContent value="suspended" className="mt-6">
-            <UserTable
-              users={suspendedUsers}
-              onStatusChange={handleStatusChange}
               onDeleteUser={handleDeleteUser}
               onUpdateRole={handleUpdateRole}
             />
@@ -173,7 +143,20 @@ const Users = () => {
           <TabsContent value="premium" className="mt-6">
             <UserTable
               users={premiumUsers}
-              onStatusChange={handleStatusChange}
+              onDeleteUser={handleDeleteUser}
+              onUpdateRole={handleUpdateRole}
+            />
+          </TabsContent>
+          <TabsContent value="admin" className="mt-6">
+            <UserTable
+              users={AdminUsers}
+              onDeleteUser={handleDeleteUser}
+              onUpdateRole={handleUpdateRole}
+            />
+          </TabsContent>
+          <TabsContent value="user" className="mt-6">
+            <UserTable
+              users={NormalUser}
               onDeleteUser={handleDeleteUser}
               onUpdateRole={handleUpdateRole}
             />

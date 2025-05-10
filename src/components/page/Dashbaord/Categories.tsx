@@ -1,8 +1,7 @@
 "use client";
 import CategoryManager from "@/components/dashboard/CategoryManager";
-import { mockCategories } from "@/components/data/mockData";
 
-const Categories = () => {
+const Categories = ({ Foodcatagories }) => {
   return (
     <div>
       <div className="space-y-6">
@@ -13,7 +12,7 @@ const Categories = () => {
           </p>
         </div>
 
-        <CategoryManager initialCategories={mockCategories} />
+        <CategoryManager initialCategories={Foodcatagories} />
       </div>
     </div>
   );
