@@ -129,9 +129,9 @@ const PostDetail: React.FC<PostDetailProps> = ({
           </div>
 
           <div className="flex items-center text-sm text-muted-foreground mt-2">
-            <span>By {post.author}</span>
+            <span>By {post?.author?.name}</span>
             <span className="mx-2">•</span>
-            <span>{post.category}</span>
+            <span>{post?.category?.name}</span>
             <span className="mx-2">•</span>
             <span>{post.date}</span>
           </div>
@@ -264,18 +264,6 @@ const PostDetail: React.FC<PostDetailProps> = ({
         </div>
 
         <DialogFooter className="flex justify-between gap-4 pt-4 border-t">
-          <div className="flex gap-2">
-            <Button
-              variant={post.isPremium ? "default" : "outline"}
-              size="sm"
-              onClick={handlePremiumToggle}
-              className="flex items-center gap-1"
-            >
-              <Star className="h-4 w-4" />
-              {post.isPremium ? "Remove Premium" : "Mark as Premium"}
-            </Button>
-          </div>
-
           {post.status === "pending" ? (
             <div className="flex gap-2">
               <Button

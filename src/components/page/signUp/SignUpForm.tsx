@@ -29,6 +29,7 @@ const SignupForm = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,6 +38,7 @@ const SignupForm = () => {
 
   const onSubmit = async (data: FormData) => {
     setUploading(true);
+    setloading(true);
     try {
       let imageUrl: string | null = null;
 
@@ -58,14 +60,18 @@ const SignupForm = () => {
       const res = await SignUpUser(payload);
 
       if (res?.success) {
+        setloading(false);
         toast.success(res.message);
         router.push("/login");
       } else {
+        setloading(false);
         toast.error(res.message);
       }
     } catch (err: any) {
+      setloading(false);
       toast.error(err?.message || "Something went wrong!");
     } finally {
+      setloading(false);
       setUploading(false);
     }
   };
@@ -241,7 +247,7 @@ const SignupForm = () => {
             type="submit"
             className="w-full bg-[#FF6b35] hover:bg-[#FF6b35]/90"
           >
-            Sign Up
+            {loading ? "SignUp...." : " Sign Up"}
           </Button>
         </form>
 

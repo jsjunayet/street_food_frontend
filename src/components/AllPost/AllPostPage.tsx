@@ -288,7 +288,7 @@ const AllPostPage = ({ posts, categoriess }) => {
                 <Button
                   className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   onClick={handleCreatePost}
-                  disabled={!title.trim() || !newPostContent.trim()}
+                  disabled={loading || !title.trim() || !newPostContent.trim()}
                 >
                   {loading ? "Posting...." : "Post"}
                 </Button>

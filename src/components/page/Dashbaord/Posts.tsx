@@ -18,7 +18,7 @@ import { Download, Filter, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const Posts = ({ allposts, comment }) => {
+const Posts = ({ allposts, categories }) => {
   const [posts, setPosts] = useState<Post[]>(allposts);
   const [selectedTab, setSelectedTab] = useState<"all" | PostStatus>("all");
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -34,6 +34,7 @@ const Posts = ({ allposts, comment }) => {
     if (selectedTab === "all") return true;
     return post.status === selectedTab;
   });
+  console.log(filteredPosts);
 
   const selectedPost = selectedPostId
     ? posts.find((post) => post.id === selectedPostId)
@@ -101,12 +102,11 @@ const Posts = ({ allposts, comment }) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="baking">Baking</SelectItem>
-                <SelectItem value="drinks">Drinks</SelectItem>
-                <SelectItem value="nutrition">Nutrition</SelectItem>
-                <SelectItem value="cooking">Cooking</SelectItem>
-                <SelectItem value="travel">Travel</SelectItem>
-                <SelectItem value="food-history">Food History</SelectItem>
+                {categories.map((item) => (
+                  <SelectItem key={item.id} value={`${item.name}`}>
+                    {item.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -155,7 +155,7 @@ const Posts = ({ allposts, comment }) => {
                     key={post.id}
                     id={post.id}
                     title={post.title}
-                    author={post.author || "Unknown author"}
+                    author={post.user || "Unknown author"}
                     category={post.category || "Food"}
                     imageUrl={post.imageUrl || post.image || ""}
                     excerpt={post.excerpt || post.description || ""}
@@ -189,7 +189,7 @@ const Posts = ({ allposts, comment }) => {
           post={{
             id: selectedPost.id,
             title: selectedPost.title,
-            author: selectedPost.author || "Unknown author",
+            author: selectedPost.user || "Unknown author",
             category: selectedPost.category || "Food",
             imageUrl: selectedPost.imageUrl || selectedPost.image || "",
             content: selectedPost.content || selectedPost.description,

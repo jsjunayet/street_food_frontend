@@ -74,13 +74,13 @@ const PostCard: React.FC<PostCardProps> = ({
     switch (currentStatus) {
       case "pending":
         return (
-          <Badge variant="outline" className="status-badge status-pending">
+          <Badge variant="outline" className=" bg-yellow-500/80">
             Pending
           </Badge>
         );
       case "approved":
         return (
-          <Badge variant="outline" className="status-badge status-approved">
+          <Badge variant="outline" className="bg-green-700/80">
             Approved
           </Badge>
         );
@@ -113,7 +113,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="absolute top-2 right-2 flex gap-2">
           {getStatusBadge()}
           {premium && (
-            <Badge variant="outline" className="status-badge status-premium">
+            <Badge variant="outline" className=" bg-yellow-400/80">
               <Star className="h-3 w-3 mr-1" />
               Premium
             </Badge>
@@ -162,9 +162,9 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
 
         <div className="flex items-center text-xs text-muted-foreground mb-2">
-          <span>{category}</span>
+          <span>{category?.name}</span>
           <span className="mx-1">•</span>
-          <span>By {author}</span>
+          <span>By {author?.name}</span>
           <span className="mx-1">•</span>
           <span>{date}</span>
         </div>

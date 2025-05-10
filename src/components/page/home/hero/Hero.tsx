@@ -49,7 +49,7 @@ const HeroSection: React.FC = () => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [currentBg]);
+  }, []);
 
   // Handle slide changes with coordinated animations
   const handleSlideChange = (index: number) => {
