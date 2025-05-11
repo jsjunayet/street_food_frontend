@@ -3,12 +3,18 @@ import CommentCard from "@/components/dashboard/CommentCart";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { deletedComment, updateComment } from "@/services/commentservice";
+import { Comment } from "@/types";
 import { MessageSquare, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const Comments = ({ Postcomments }) => {
+interface commentsPros {
+  Postcomments: Comment[];
+}
+
+const Comments: React.FC<commentsPros> = ({ Postcomments }) => {
   const [searchQuery, setSearchQuery] = useState("");
+
   const handleDelete = async (id: string) => {
     await deletedComment(id);
     toast.error("Comment deleted");
@@ -18,6 +24,11 @@ const Comments = ({ Postcomments }) => {
     await updateComment(id, commentText);
     toast.success("Comment updated");
   };
+
+  // Filtered comments based on search query
+  const filteredComments = Postcomments.filter((comment) =>
+    comment.commentText.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div>
@@ -41,66 +52,37 @@ const Comments = ({ Postcomments }) => {
 
         <Tabs defaultValue="All">
           <TabsList>
-            <TabsTrigger value="pending" className="flex items-center gap-1">
+            <TabsTrigger value="All" className="flex items-center gap-1">
               <MessageSquare className="h-4 w-4" />
               All
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {Postcomments?.length}
+                {filteredComments.length}
               </span>
             </TabsTrigger>
-
-            {/* <TabsTrigger value="deleted" className="flex items-center gap-1">
-              Deleted
-              <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {deletedCommentsList.length}
-              </span>
-            </TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="All" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Postcomments?.map((comment) => (
+              {filteredComments.map((comment: Comment) => (
                 <CommentCard
                   key={comment.id}
                   id={comment.id}
                   author={comment.user.email}
                   content={comment.commentText}
                   postTitle={comment.post.title}
-                  date={comment.createdAt}
+                  date={comment.createdAt.toString()}
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                 />
               ))}
             </div>
 
-            {Postcomments?.length === 0 && (
+            {filteredComments.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">No pending comments</p>
+                <p className="text-muted-foreground">No comments found</p>
               </div>
             )}
           </TabsContent>
-          {/* <TabsContent value="deleted" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {deletedCommentsList.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  id={comment.id}
-                  author={comment.author}
-                  content={comment.content}
-                  postTitle={comment.postTitle}
-                  date={comment.date}
-                  onApprove={handleApprove}
-                  onDelete={() => {}}
-                />
-              ))}
-            </div>
-
-            {deletedCommentsList.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No deleted comments</p>
-              </div>
-            )}
-          </TabsContent> */}
         </Tabs>
       </div>
     </div>

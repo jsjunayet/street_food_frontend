@@ -10,7 +10,6 @@ interface CommentCardProps {
   content: string;
   postTitle?: string;
   date: string;
-  onApprove: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit?: (id: string, newContent: string) => void;
 }

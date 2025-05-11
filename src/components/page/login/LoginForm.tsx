@@ -21,6 +21,8 @@ const LoginForm = () => {
   } = useForm<FormData>();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("callbackUrl");
+  // const redirect = false;
+
   const router = useRouter();
   const { setIsLoading } = useUser();
 
@@ -161,7 +163,7 @@ const LoginForm = () => {
 
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/signup"
               className="text-[#FF6b35] hover:text-[#D64933]"

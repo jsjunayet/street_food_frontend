@@ -9,71 +9,34 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Check, MessageSquare, Star, X } from "lucide-react";
+import { Comment } from "@/types";
+import { Post } from "@/types/user";
+import { MessageSquare, Star } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
-import { toast } from "sonner";
 
-export type Comment = {
-  id: string;
-  author: string;
-  content: string;
-  date: string;
-};
-
-export type PostDetailProps = {
+interface PostDetailProps {
+  post: Post;
   open: boolean;
-  onOpenChange: (open: boolean) => void;
-  post: {
-    id: string;
-    title: string;
-    author: string;
-    category: string;
-    imageUrl: string;
-    content?: string;
-    excerpt: string;
-    status: "pending" | "approved" | "rejected";
-    isPremium: boolean;
-    date: string;
-  };
   comments: Comment[];
+  onOpenChange: (open: boolean) => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-  onPremiumToggle: (id: string, isPremium: boolean) => void;
   onEditComment: (id: string, newContent: string) => void;
   onDeleteComment: (id: string) => void;
-};
+}
 
 const PostDetail: React.FC<PostDetailProps> = ({
   open,
   onOpenChange,
   post,
   comments,
-  onApprove,
-  onReject,
-  onPremiumToggle,
   onDeleteComment,
   onEditComment,
 }) => {
   const [activeTab, setActiveTab] = useState<string>("content");
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState<string>("");
-
-  const handleApprove = () => {
-    onApprove(post.id);
-  };
-
-  const handleReject = () => {
-    onReject(post.id);
-  };
-
-  const handlePremiumToggle = () => {
-    onPremiumToggle(post.id, !post.isPremium);
-    toast.info(
-      `Post ${!post.isPremium ? "marked as premium" : "removed from premium"}`
-    );
-  };
-
   const getStatusBadge = () => {
     switch (post.status) {
       case "pending":
@@ -129,7 +92,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
           </div>
 
           <div className="flex items-center text-sm text-muted-foreground mt-2">
-            <span>By {post?.author?.name}</span>
+            <span>By {post?.user?.name}</span>
             <span className="mx-2">•</span>
             <span>{post?.category?.name}</span>
             <span className="mx-2">•</span>
@@ -162,11 +125,11 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 value="content"
                 className="mt-0 p-4 border rounded-md h-full"
               >
-                <div className="aspect-video mb-4">
+                <div className="aspect-video  mb-4">
                   <Image
                     height={500}
                     width={500}
-                    src={post.imageUrl}
+                    src={post?.imageUrl || ""}
                     alt={post.title}
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -187,7 +150,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
                 className="mt-0 h-[200px] overflow-y-auto space-y-4 pr-2"
               >
                 {comments.length > 0 ? (
-                  comments.map((comment) => (
+                  comments.map((comment: Comment) => (
                     <Card key={comment.id} className="border">
                       <CardContent className="pt-4">
                         <div className="flex justify-between items-start mb-2">
@@ -264,36 +227,13 @@ const PostDetail: React.FC<PostDetailProps> = ({
         </div>
 
         <DialogFooter className="flex justify-between gap-4 pt-4 border-t">
-          {post.status === "pending" ? (
-            <div className="flex gap-2">
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleReject}
-                className="flex items-center gap-1"
-              >
-                <X className="h-4 w-4" />
-                Reject
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleApprove}
-                className="flex items-center gap-1"
-              >
-                <Check className="h-4 w-4" />
-                Approve
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onOpenChange(false)}
-            >
-              Close
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenChange(false)}
+          >
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

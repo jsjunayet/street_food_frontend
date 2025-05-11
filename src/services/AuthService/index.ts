@@ -24,7 +24,6 @@ export const SignUpUser = async (userData: FieldValues) => {
     //   //   (await cookies()).set("refreshToken", result?.data?.refreshToken);
     // }
     return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return Error(error);
   }
@@ -51,12 +50,11 @@ export const loginUser = async (userData: FieldValues) => {
     }
 
     return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return Error(error);
   }
 };
-export const verifyUser = async (id) => {
+export const verifyUser = async (id: string) => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/user/verify?order_id=${id}`,
@@ -82,7 +80,9 @@ export const verifyUser = async (id) => {
 };
 
 // create post
-export const premiumUser = async (userData: FormData): Promise<any> => {
+export const premiumUser = async (
+  userData: Record<string, any>
+): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {
@@ -94,7 +94,7 @@ export const premiumUser = async (userData: FormData): Promise<any> => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(userData), // now a plain object
       }
     );
     const result = await res.json();
@@ -104,6 +104,7 @@ export const premiumUser = async (userData: FormData): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
+
 export const subscription = async () => {
   try {
     const res = await fetch(
@@ -186,7 +187,6 @@ export const getNewToken = async () => {
     );
 
     return res.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return Error(error);
   }

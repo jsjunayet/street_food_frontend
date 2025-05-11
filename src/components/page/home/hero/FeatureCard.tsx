@@ -23,7 +23,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         animationDelay: `${delay * 200}ms`,
         opacity: 0,
         animation: "fadeIn 0.8s ease-out forwards",
-        animationDelay: `${delay * 200}ms`,
       }}
     >
       <div className="feature-card h-64 w-full">

@@ -9,7 +9,7 @@ interface User {
   email: string;
 }
 
-interface SubscriptionProps {
+export interface SubscriptionProps {
   subscription: {
     paymentStatus: boolean;
     user: User;
@@ -21,8 +21,7 @@ interface SubscriptionProps {
 }
 
 const SubscriptionCard = ({ subscription }: SubscriptionProps) => {
-  console.log(subscription);
-  const isPaid = subscription.paymentStatus;
+  const isPaid = subscription?.paymentStatus;
 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -53,7 +52,7 @@ const SubscriptionCard = ({ subscription }: SubscriptionProps) => {
             </Avatar>
             <div>
               <h2 className="font-semibold text-lg">
-                {subscription.plan || "Premium Plan"}
+                {subscription?.plan || "Premium Plan"}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {subscription?.user?.email}
@@ -75,9 +74,9 @@ const SubscriptionCard = ({ subscription }: SubscriptionProps) => {
 
         <div className="space-y-3 pt-2">
           <SubscriptionDetails
-            paymentMethod={subscription.paymentMethod}
-            date={formatDate(subscription.subscriptedAt)}
-            price={subscription.price}
+            paymentMethod={subscription?.paymentMethod}
+            date={formatDate(subscription?.subscriptedAt)}
+            price={subscription?.price}
           />
         </div>
       </div>

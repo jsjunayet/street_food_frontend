@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, Download, HelpCircle, LogOut, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const AdminHeader = () => {
-  const router = useRouter();
+  const pathname = usePathname();
   const getPageTitle = () => {
-    switch (router.pathname) {
+    switch (pathname) {
       case "/":
         return "Dashboard";
       case "/posts":

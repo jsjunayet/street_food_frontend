@@ -1,13 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser, logout } from "@/services/AuthService";
+import { IUser } from "@/types";
 import { Menu, Search, X } from "lucide-react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const [user, setUser] = useState<UserToken | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -238,7 +240,7 @@ const Navbar = () => {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        setIsLoggedIn(true);
+                        // setIsLoggedIn(true);
                         toggleMenu();
                       }}
                       className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"

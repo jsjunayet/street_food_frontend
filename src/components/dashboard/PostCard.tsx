@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Post } from "@/types/user";
 import { Check, MoreVertical, Star, X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -14,16 +15,7 @@ import { toast } from "sonner";
 
 export type PostStatus = "pending" | "approved" | "rejected";
 
-interface PostCardProps {
-  id: string;
-  title: string;
-  author: string;
-  category: string;
-  imageUrl: string;
-  excerpt: string;
-  status: PostStatus;
-  isPremium: boolean;
-  date: string;
+interface PostCardProps extends Post {
   onStatusChange?: (id: string, status: PostStatus) => void;
   onPremiumToggle?: (id: string, isPremium: boolean) => void;
   onClick?: () => void;
@@ -32,7 +24,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({
   id,
   title,
-  author,
+  user,
   category,
   imageUrl,
   excerpt,
@@ -86,7 +78,7 @@ const PostCard: React.FC<PostCardProps> = ({
         );
       case "rejected":
         return (
-          <Badge variant="outline" className="status-badge status-rejected">
+          <Badge variant="outline" className="bg-red-700/70">
             Rejected
           </Badge>
         );
@@ -101,11 +93,11 @@ const PostCard: React.FC<PostCardProps> = ({
       onClick={onClick}
     >
       <div className="aspect-video  relative">
-        <div className=" ">
+        <div className="h-72">
           <Image
             width={500}
             height={500}
-            src={imageUrl}
+            src={imageUrl || ""}
             alt={title}
             className="object-cover w-full h-full"
           />
@@ -164,7 +156,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="flex items-center text-xs text-muted-foreground mb-2">
           <span>{category?.name}</span>
           <span className="mx-1">•</span>
-          <span>By {author?.name}</span>
+          <span>By {user?.name}</span>
           <span className="mx-1">•</span>
           <span>{date}</span>
         </div>

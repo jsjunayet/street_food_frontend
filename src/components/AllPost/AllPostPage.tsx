@@ -22,24 +22,29 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/context/UserContext";
 import { createPost } from "@/services/postService";
+import { Category } from "@/types";
 import { uploadImagesToCloudinary } from "@/utlity/cloudinary";
 import { Filter, MapPin, Search, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import FoodPostCard from "./FoodPostCard";
-
-const AllPostPage = ({ posts, categoriess }) => {
+import FoodPostCard, { IPost } from "./FoodPostCard";
+interface IAllPostPros {
+  posts: IPost[];
+  categoriess: Category[];
+}
+const AllPostPage: React.FC<IAllPostPros> = ({ posts, categoriess }) => {
   const { user } = useUser();
   const [title, setTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostLocation, setNewPostLocation] = useState("");
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [imagePreviewUrls, setImagePreviewUrls] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+  console.log(coordinates);
   const [price, setPrice] = useState("");
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -48,8 +53,8 @@ const AllPostPage = ({ posts, categoriess }) => {
   const [popularOnly, setPopularOnly] = useState(false);
   const [loading, setloading] = useState(false);
 
-  const handleFileSelect = (e) => {
-    const filesArray = Array.from(e.target.files);
+  const handleFileSelect = (e: any) => {
+    const filesArray = Array.from(e.target.files) as File[];
     if (filesArray.length > 4) {
       toast.error("You can only upload up to 4 images");
       return;
@@ -112,7 +117,8 @@ const AllPostPage = ({ posts, categoriess }) => {
       categoryId: selectedCategoryId,
     };
 
-    const res = await createPost(payload);
+    const res = await createPost(payload); // এখন কোন error থাকবে না
+
     if (res.success) {
       toast.success("Post created!");
       setloading(false);
@@ -167,7 +173,7 @@ const AllPostPage = ({ posts, categoriess }) => {
           <CardHeader className="pb-3">
             <div className="flex items-center gap-4">
               <Avatar>
-                <AvatarImage src={user?.image} />
+                <AvatarImage src={user?.image ?? ""} />
                 <AvatarFallback>You</AvatarFallback>
               </Avatar>
               <div>
@@ -386,7 +392,7 @@ const AllPostPage = ({ posts, categoriess }) => {
             <DialogHeader>
               <DialogTitle>Enter Your Location</DialogTitle>
               <DialogDescription>
-                Couldn't detect location. Please enter manually.
+                Couldn&apos;t detect location. Please enter manually.
               </DialogDescription>
             </DialogHeader>
             <Input

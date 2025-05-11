@@ -1,10 +1,18 @@
 "use client";
+import PostCard from "@/components/dashboard/PostCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import StatCard from "@/components/dashboard/StartCard";
 import { mockActivity, mockStats } from "@/components/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PostStatus } from "@/types";
-import { FileText, MessageSquare, Star, Users } from "lucide-react";
+import { postAprroved, premiumAprroved } from "@/services/postService";
+import { Post } from "@/types/user";
+import {
+  CheckCircle,
+  FileText,
+  MessageSquare,
+  Star,
+  Users,
+} from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -23,19 +31,24 @@ const data = [
   { name: "May", posts: 40, users: 66 },
   { name: "Jun", posts: 38, users: 62 },
 ];
-
-const Dashboard = () => {
-  const handleStatusChange = (id: string, status: PostStatus) => {
-    console.log(`Post ${id} status changed to ${status}`);
+interface IDashbaordProps {
+  posts: Post[];
+}
+const Dashboard: React.FC<IDashbaordProps> = ({ posts }) => {
+  const handleStatusChange = async (id: string, status: PostStatus) => {
+    await postAprroved(id, status);
   };
 
-  const handlePremiumToggle = (id: string, isPremium: boolean) => {
-    console.log(
-      `Post ${id} premium status changed to ${
-        isPremium ? "premium" : "standard"
-      }`
-    );
+  const handlePremiumToggle = async (id: string) => {
+    await premiumAprroved(id);
   };
+  const pendingPost: Post[] =
+    posts
+      .filter((post: Post) => post.status === "pending")
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ) || [];
 
   return (
     <div className="space-y-6">
@@ -113,30 +126,43 @@ const Dashboard = () => {
 
         <RecentActivity activities={mockActivity} />
       </div>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">All Recently Post</h2>
 
-      {/* <div>
-        <h2 className="text-xl font-semibold mb-4">Pending Approval</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mockPosts
-            .filter((post) => post.status === "pending")
-            .map((post) => (
+        {pendingPost.length === 0 ? (
+          <Card className="flex flex-col py-20 items-center justify-center p-10 text-center text-muted-foreground">
+            <CheckCircle className="w-10 h-10 text-green-500 mb-4" />
+            <p className="text-lg font-medium">No pending posts found</p>
+            <p className="text-sm">
+              All content has been reviewed and approved.
+            </p>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pendingPost.map((post) => (
               <PostCard
                 key={post.id}
                 id={post.id}
                 title={post.title}
-                author={post.author}
-                category={post.category}
-                imageUrl={post.imageUrl}
-                excerpt={post.excerpt}
-                status={post.status}
+                comments={post.comments}
+                user={post.user || "Unknown author"}
+                category={post.category || "Food"}
+                imageUrl={post.imageUrl || post.image || ""}
+                excerpt={post.excerpt || post.description || ""}
+                status={post.status as PostStatus}
                 isPremium={post.isPremium}
-                date={post.date}
+                createdAt={post.createdAt.toString()}
+                date={
+                  post.date ||
+                  new Date(post.createdAt || "").toLocaleDateString()
+                }
                 onStatusChange={handleStatusChange}
                 onPremiumToggle={handlePremiumToggle}
               />
             ))}
-        </div>
-      </div> */}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

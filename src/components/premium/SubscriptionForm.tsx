@@ -1,8 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -14,11 +15,11 @@ import { Input } from "@/components/ui/input";
 import { premiumUser } from "@/services/AuthService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Form validation schema
+// ✅ Schema
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email"),
@@ -27,8 +28,8 @@ const formSchema = z.object({
     .regex(/^01\d{9}$/, "Please enter a valid Bangladeshi phone number"),
   address: z.string().min(5, "Address must be at least 5 characters"),
   city: z.string().min(2, "City must be at least 2 characters"),
-  agreeTerms: z.literal(true, {
-    errorMap: () => ({ message: "You must agree to the terms and conditions" }),
+  agreeTerms: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the terms and conditions",
   }),
 });
 
@@ -37,8 +38,7 @@ type FormValues = z.infer<typeof formSchema>;
 const SubscriptionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize react-hook-form with our schema
-  const form = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -50,50 +50,47 @@ const SubscriptionForm = () => {
     },
   });
 
-  // Handle form submission
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
-
     try {
-      // Prepare payment data to send to ShurjoPay
-      const paymentData = {
-        amount: 1000,
+      const payloadData = {
+        amount: "1000",
         name: data.name,
         email: data.email,
         phone: data.phone,
         address: data.address,
         city: data.city,
       };
-      const res = await premiumUser(paymentData);
+
+      const res = await premiumUser(payloadData);
+
       if (res.success) {
         toast.success("Redirecting to payment gateway...", {
-          description:
-            "You'll be redirected to ShurjoPay to complete your payment",
+          description: "You'll be redirected to ShurjoPay to complete payment",
         });
-        setIsLoading(false);
         setTimeout(() => {
-          window.location.href = res?.data.checkoutUrl;
+          window.location.href = res.data.checkoutUrl;
         }, 1000);
       } else {
-        console.log(res.message);
-        setIsLoading(false);
+        toast.error("Failed to start payment", {
+          description: res.message || "Unknown error",
+        });
       }
-    } catch (err: unknown) {
-      console.log(err);
-      toast.error("Payment processing failed", {
-        description:
-          "There was an issue connecting to the payment gateway. Please try again.",
+    } catch (error) {
+      console.error(error);
+      toast.error("Payment failed", {
+        description: "Please try again later.",
       });
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -107,7 +104,6 @@ const SubscriptionForm = () => {
           />
 
           <FormField
-            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -127,7 +123,6 @@ const SubscriptionForm = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            control={form.control}
             name="phone"
             render={({ field }) => (
               <FormItem>
@@ -144,7 +139,6 @@ const SubscriptionForm = () => {
           />
 
           <FormField
-            control={form.control}
             name="city"
             render={({ field }) => (
               <FormItem>
@@ -159,7 +153,6 @@ const SubscriptionForm = () => {
         </div>
 
         <FormField
-          control={form.control}
           name="address"
           render={({ field }) => (
             <FormItem>
@@ -173,7 +166,6 @@ const SubscriptionForm = () => {
         />
 
         <FormField
-          control={form.control}
           name="agreeTerms"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -206,12 +198,7 @@ const SubscriptionForm = () => {
           </div>
         </Card>
 
-        <Button
-          type="submit"
-          className="w-full "
-          size="lg"
-          disabled={isLoading}
-        >
+        <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
           {isLoading ? (
             <>
               <svg
@@ -245,7 +232,7 @@ const SubscriptionForm = () => {
           <p>Secure payment processed by ShurjoPay</p>
         </div>
       </form>
-    </Form>
+    </FormProvider>
   );
 };
 

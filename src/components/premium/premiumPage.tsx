@@ -6,14 +6,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { User } from "@/types";
 import OrderPage from "../order/OrderPage";
 import SubscriptionForm from "./SubscriptionForm";
-
-const PremiumPage = ({ user, payment }) => {
+interface PremiumPageProps {
+  payment: {
+    paymentStatus: boolean;
+    user: User;
+    paymentMethod: string;
+    subscriptedAt: string | number | Date;
+    price: number;
+    plan?: string;
+  };
+}
+const PremiumPage: React.FC<PremiumPageProps> = ({ payment }) => {
   return (
     <div>
-      {user.isPremium ? (
-        <OrderPage result={payment} />
+      {payment?.paymentStatus ? (
+        <OrderPage subscription={payment} />
       ) : (
         <div className=" py-8 min-h-screen mx-2 lg:mx-0">
           <div className="max-w-3xl mx-auto">

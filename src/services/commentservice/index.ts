@@ -47,7 +47,10 @@ export const deletedComment = async (id: string): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
-export const updateComment = async (id: string, commentText): Promise<any> => {
+export const updateComment = async (
+  id: string,
+  commentText: string
+): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {

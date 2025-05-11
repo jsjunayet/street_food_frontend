@@ -1,7 +1,10 @@
 "use client";
 import CategoryManager from "@/components/dashboard/CategoryManager";
-
-const Categories = ({ Foodcatagories }) => {
+import { Category } from "@/types";
+interface CategoryManagerProps {
+  initialCategories: Category[];
+}
+const Categories: React.FC<CategoryManagerProps> = ({ initialCategories }) => {
   return (
     <div>
       <div className="space-y-6">
@@ -12,7 +15,7 @@ const Categories = ({ Foodcatagories }) => {
           </p>
         </div>
 
-        <CategoryManager initialCategories={Foodcatagories} />
+        <CategoryManager initialCategories={initialCategories} />
       </div>
     </div>
   );

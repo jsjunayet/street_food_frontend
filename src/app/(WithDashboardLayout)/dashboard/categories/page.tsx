@@ -5,7 +5,7 @@ const Category = async () => {
   const result = await getAllcategory();
   return (
     <div>
-      <Categories Foodcatagories={result?.data} />
+      <Categories initialCategories={result?.data} />
     </div>
   );
 };

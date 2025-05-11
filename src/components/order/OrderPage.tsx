@@ -1,6 +1,6 @@
-import SubscriptionCard from "./SubscriptionCard";
+import SubscriptionCard, { SubscriptionProps } from "./SubscriptionCard";
 
-const OrderPage = ({ result }) => {
+const OrderPage: React.FC<SubscriptionProps> = ({ subscription }) => {
   return (
     <div className="min-h-screen ">
       <div className="container py-16 px-4 md:px-6">
@@ -14,7 +14,7 @@ const OrderPage = ({ result }) => {
         </div>
 
         <div className="max-w-3xl mx-auto space-y-6">
-          <SubscriptionCard subscription={result} />
+          <SubscriptionCard subscription={subscription} />
         </div>
       </div>
     </div>

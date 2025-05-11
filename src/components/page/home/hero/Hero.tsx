@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // Define background images with high-quality food photography
 const heroBackgrounds = [
@@ -35,6 +35,33 @@ const HeroSection: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Handle slide changes with coordinated animations
+  const handleSlideChange = useCallback(
+    (index: number) => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+
+      const nextIndex = index >= heroBackgrounds.length ? 0 : index;
+
+      setTitleVisible(false);
+
+      setTimeout(() => {
+        setCurrentTitle(heroBackgrounds[nextIndex].title);
+        setIsLoading(true);
+        setTimeout(() => {
+          setIsLoading(false);
+          setTitleVisible(true);
+        }, 300);
+      }, 500);
+
+      setTimeout(() => {
+        setCurrentBg(nextIndex);
+        timerRef.current = setTimeout(() => {
+          handleSlideChange(nextIndex + 1);
+        }, 7000);
+      }, 1000);
+    },
+    [setCurrentTitle, setCurrentBg]
+  );
   useEffect(() => {
     const autoRotate = () => {
       timerRef.current = setTimeout(() => {
@@ -49,38 +76,7 @@ const HeroSection: React.FC = () => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, []);
-
-  // Handle slide changes with coordinated animations
-  const handleSlideChange = (index: number) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-
-    // Reset if we've reached the end
-    const nextIndex = index >= heroBackgrounds.length ? 0 : index;
-
-    // Start fade out animation
-    setTitleVisible(false);
-
-    // Change title and brief loading effect
-    setTimeout(() => {
-      setCurrentTitle(heroBackgrounds[nextIndex].title);
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        setTitleVisible(true);
-      }, 300);
-    }, 500);
-
-    // Change background with zoom effect
-    setTimeout(() => {
-      setCurrentBg(nextIndex);
-
-      // Reset auto rotation
-      timerRef.current = setTimeout(() => {
-        handleSlideChange(nextIndex + 1);
-      }, 7000);
-    }, 1000);
-  };
+  }, [currentBg, handleSlideChange]);
 
   return (
     <div className="relative bg-black text-white overflow-hidden min-h-screen">

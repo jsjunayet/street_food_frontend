@@ -1,38 +1,41 @@
 import PremiumBadge from "@/components/share/PremiumBage";
+import { Category } from "@/types";
 import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import Image from "next/image";
 
-interface FoodSpotCardProps {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  averageRating: number;
-  price: string;
-  category: string[];
-  location: string;
-  isPremium?: boolean;
-  upVotes: number;
-  downVotes: number;
-  totalComments: number;
-  className?: string;
+export interface FoodSpotCardProps {
+  spot: {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    averageRating: number;
+    price: number;
+    category?: Category;
+    location: string;
+    isPremium?: boolean;
+    upVotes: number;
+    downVotes: number;
+    totalComments: number;
+    className?: string;
+  };
 }
 
-const FoodSpotCard = ({
-  id,
-  title,
-  description,
-  image,
-  averageRating,
-  price,
-  category,
-  location,
-  isPremium,
-  upVotes,
-  downVotes,
-  totalComments,
-  className = "",
-}: FoodSpotCardProps) => {
+const FoodSpotCard: React.FC<FoodSpotCardProps> = ({ spot }) => {
+  const {
+    title,
+    description,
+    image,
+    averageRating,
+    price,
+    category,
+    location,
+    isPremium,
+    upVotes,
+    downVotes,
+    totalComments,
+    className = "",
+  } = spot;
   return (
     <div
       className={`bg-white rounded-lg overflow-hidden food-card-shadow relative ${className}`}
@@ -60,7 +63,7 @@ const FoodSpotCard = ({
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent h-16"></div>
         <div className="absolute bottom-2 left-3 flex items-center gap-1">
           <div className="bg-white/90 rounded-full px-2 py-1 text-xs font-medium">
-            {category.name}
+            {category?.name}
           </div>
           <div className="bg-yellow-500/90 rounded-full px-2 py-1 text-xs font-medium">
             {price} $

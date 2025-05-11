@@ -35,8 +35,8 @@ const Category = () => {
             </div>
             <h3 className="text-xl font-bold mb-2">Rate & Review</h3>
             <p className="text-gray-600">
-              Share your experiences by rating and reviewing the spots you've
-              visited.
+              Share your experiences by rating and reviewing the spots
+              you&apos;ve visited.
             </p>
           </div>
 

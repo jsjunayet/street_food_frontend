@@ -8,16 +8,10 @@ import {
   deletedCategory,
   updateCategory,
 } from "@/services/categoryservice";
+import { Category } from "@/types";
 import { Edit, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  count: number;
-}
 
 interface CategoryManagerProps {
   initialCategories: Category[];
@@ -34,8 +28,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
 
     if (editingId) {
       console.log(editingId);
-      const res = await updateCategory(editingId, categoryName);
-      console.log(res);
+      await updateCategory(editingId, categoryName);
     } else {
       await createCategory(categoryName);
     }
@@ -90,10 +83,10 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
               </tr>
             </thead>
             <tbody>
-              {initialCategories?.map((category) => (
+              {initialCategories?.map((category: Category) => (
                 <tr key={category.id}>
                   <td className="px-4 py-2">{category.name}</td>
-                  <td className="px-4 py-2">{category?._count.posts}</td>
+                  <td className="px-4 py-2">{category?._count?.posts}</td>
                   <td className="px-4 py-2">
                     <div className="flex gap-2">
                       <Button

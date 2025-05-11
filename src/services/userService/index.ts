@@ -47,7 +47,7 @@ export const deletedUser = async (id: string): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
-export const roleUpate = async (id: string, role): Promise<any> => {
+export const roleUpate = async (id: string, role: string): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {

@@ -1,8 +1,10 @@
+import { IUser } from "./user";
+
 export * from "./user";
 
 export type PostStatus = "pending" | "approved" | "rejected";
 
-export type UserRole = "admin" | "user" | "premium";
+export type UserRole = "ADMIN" | "USER";
 
 export type UserStatus = "active" | "suspended" | "banned";
 
@@ -32,10 +34,10 @@ export type ActivityItem = {
 
 export type Comment = {
   id: string;
-  author: string;
-  content: string;
-  postTitle: string;
-  date: string;
+  user: IUser;
+  commentText: string;
+  createdAt: Date | string;
+  post: Post;
 };
 
 export type Post = {

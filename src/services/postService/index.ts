@@ -71,7 +71,9 @@ export const getAllPostForAdmin = async () => {
 };
 
 // create post
-export const createPost = async (postData: FormData): Promise<any> => {
+export const createPost = async (
+  postData: Record<string, any>
+): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {

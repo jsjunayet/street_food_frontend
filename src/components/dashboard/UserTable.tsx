@@ -14,21 +14,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User, UserRole } from "@/types";
+import { IUser, UserRole } from "@/types";
 import { ChevronDown, Edit, Star, Trash } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
 interface UserTableProps {
-  users: User[];
-  onStatusChange: (id: string, status: "active" | "suspended") => void;
+  users: IUser[];
   onDeleteUser?: (id: string) => void;
   onUpdateRole?: (id: string, role: UserRole) => void;
 }
 
 const UserTable: React.FC<UserTableProps> = ({
   users,
-
   onDeleteUser,
   onUpdateRole,
 }) => {
@@ -45,7 +43,7 @@ const UserTable: React.FC<UserTableProps> = ({
   };
 
   const getRoleBadgeVariant = (role: UserRole) => {
-    if (role === "ADMIN" || role === "admin") return "default";
+    if (role === "ADMIN") return "default";
     return "outline";
   };
 
@@ -71,7 +69,7 @@ const UserTable: React.FC<UserTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users?.map((user) => {
+          {users?.map((user: IUser) => {
             // Determine user status based on data
             const userStatus = user.status || "active";
 
@@ -152,12 +150,16 @@ const UserTable: React.FC<UserTableProps> = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
-                            onClick={() => handleUpdateRole(user.id, "USER")}
+                            onClick={() =>
+                              handleUpdateRole(user.id, "USER" as UserRole)
+                            }
                           >
                             User
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => handleUpdateRole(user.id, "ADMIN")}
+                            onClick={() =>
+                              handleUpdateRole(user.id, "ADMIN" as UserRole)
+                            }
                           >
                             Admin
                           </DropdownMenuItem>

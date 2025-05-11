@@ -1,20 +1,27 @@
+import { IPost } from "@/components/AllPost/FoodPostCard";
 import { Button } from "@/components/ui/button";
+import { IUser } from "@/types";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import FoodSpotCard from "../foodSpotList/FoodSpotCard";
-
-const FeaturedSpots = ({ user, posts }) => {
+interface FeaturedSpotsProps {
+  user: IUser;
+  posts: IPost[];
+}
+const FeaturedSpots: React.FC<FeaturedSpotsProps> = ({ user, posts }) => {
   const safePosts = Array.isArray(posts) ? posts : [];
 
-  const premiumPosts = safePosts
-    .filter((post) => post.isPremium)
-    .sort((a, b) => b.upVotes - a.upVotes)
-    .slice(0, 2);
+  const premiumPosts =
+    safePosts
+      .filter((post) => post.isPremium)
+      .sort((a, b) => b.upVotes - a.upVotes)
+      .slice(0, 2) || [];
 
-  const nonPremiumPosts = safePosts
-    .filter((post) => !post.isPremium)
-    .sort((a, b) => b.upVotes - a.upVotes)
-    .slice(0, 3);
+  const nonPremiumPosts =
+    safePosts
+      .filter((post) => !post.isPremium)
+      .sort((a, b) => b.upVotes - a.upVotes)
+      .slice(0, 3) || [];
 
   return (
     <div className="py-16">
@@ -36,7 +43,7 @@ const FeaturedSpots = ({ user, posts }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {nonPremiumPosts?.map((spot) => (
-            <FoodSpotCard key={spot.id} {...spot} />
+            <FoodSpotCard key={spot.id} spot={spot} />
           ))}
         </div>
       </div>
@@ -67,10 +74,10 @@ const FeaturedSpots = ({ user, posts }) => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {premiumPosts?.map((spot) => (
+            {premiumPosts?.map((spot: IPost) => (
               <div key={spot.id} className="relative group overflow-hidden">
                 {/* Show the card normally */}
-                <FoodSpotCard {...spot} className="premium-card" />
+                <FoodSpotCard spot={spot} />
 
                 {/* Overlay with blur effect - only covers the card content */}
                 {!user?.isPremium && (

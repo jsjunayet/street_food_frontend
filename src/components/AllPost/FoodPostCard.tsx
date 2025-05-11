@@ -30,16 +30,6 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import PremiumBadge from "../share/PremiumBage";
 
-interface User {
-  name: string;
-  avatar: string;
-}
-
-interface Coordinates {
-  lat: number;
-  lng: number;
-}
-
 export interface IPost {
   id: string; // UUID from Prisma
   title: string;
@@ -56,11 +46,16 @@ export interface IPost {
   user?: {
     id: string;
     email: string;
+    image: string;
+    name: string;
     role: "USER" | "ADMIN";
   };
   category?: {
     id: string;
     name: string;
+    _count?: {
+      posts: number;
+    };
   };
   votes?: {
     vote: "UP" | "DOWN";
@@ -72,6 +67,11 @@ export interface IPost {
     commentText: string;
     createdAt: string;
   }[];
+  upVotes: number;
+  downVotes: number;
+  averageRating: number;
+  totalComments: number;
+  createdAt: Date;
 }
 
 interface FoodPostCardProps {
@@ -84,21 +84,24 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
   const [newComment, setNewComment] = useState("");
   const [showRatingPanel, setShowRatingPanel] = useState(false);
   const handleVote = async (type: "UP" | "DOWN", postId: string) => {
-    const data = {
-      postId,
-      vote: type,
-    };
-    await createVote(data);
+    const formData = new FormData();
+    formData.append("postId", postId);
+    formData.append("vote", type);
+    await createVote(formData); // Now, passing FormData instead of plain object
   };
 
   const handleAddComment = async (postId: string) => {
-    const payload = { postId, commentText: newComment };
-    await createComment(payload);
-    setNewComment("");
+    const formData = new FormData();
+    formData.append("postId", postId);
+    formData.append("commentText", newComment);
+    await createComment(formData); // Passing FormData instead of plain object
   };
+
   const handleRatePost = async (postId: string, start: number) => {
-    const payload = { postId, rating: start };
-    await createRating(payload);
+    const formData = new FormData();
+    formData.append("postId", postId);
+    formData.append("rating", String(start)); // Convert rating to string
+    await createRating(formData); // Passing FormData instead of plain object
   };
 
   const handleShareClick = () => {
@@ -109,8 +112,8 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
     if (navigator.share) {
       navigator
         .share({
-          title: `Food Discovery by ${post.user.name}`,
-          text: post.description.substring(0, 100) + "...",
+          title: `Food Discovery by ${post?.user?.name || "JUNAYET"}`,
+          text: post?.description?.substring(0, 100) + "...",
           url: shareUrl,
         })
         .then(() => toast.success("Post shared successfully"))
@@ -202,11 +205,14 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
         <div className="md:flex justify-between items-start">
           <div className="flex items-center justify-center md:justify-normal gap-4">
             <Avatar className=" h-12 w-12">
-              <AvatarImage src={post.user.avatar} alt={post.user?.email} />
+              <AvatarImage
+                src={post?.user?.image ?? ""}
+                alt={post.user?.email}
+              />
               <AvatarFallback>{post.user?.email.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-semibold">{post.user?.name}</div>
+              <div className="font-semibold">{post?.user?.name}</div>
               <div className=" text-sm text-gray-500">
                 <span>
                   {" "}
@@ -359,7 +365,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
 
         {showComments && (
           <div className="w-full">
-            {post.comments.map((comment) => (
+            {(post.comments || []).map((comment: any) => (
               <div key={comment.id} className="py-3 border-t">
                 <div className="flex gap-3">
                   <Avatar className="h-8 w-8">
@@ -391,7 +397,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
 
             <div className="flex items-center gap-2 mt-3">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={user.image} />
+                <AvatarImage src={user?.image ?? ""} />
                 <AvatarFallback>You</AvatarFallback>
               </Avatar>
               <div className="flex-1 relative">
@@ -400,9 +406,6 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
                   className="pr-10 bg-gray-100 border-none"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddComment();
-                  }}
                 />
                 <Button
                   size="sm"
