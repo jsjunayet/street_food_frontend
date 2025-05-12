@@ -104,6 +104,54 @@ export const premiumUser = async (
     throw new Error(error.message || "Something went wrong");
   }
 };
+export const dashbaordOverview = async (): Promise<any> => {
+  const token = (await cookies()).get("accessToken")!.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/user/admin/metadata`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["loginUser", "post", "category"],
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    throw new Error(error.message || "Something went wrong");
+  }
+};
+export const analyticsOverview = async (): Promise<any> => {
+  const token = (await cookies()).get("accessToken")!.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/post/admin/analytics`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        next: {
+          tags: ["loginUser", "post", "category"],
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    throw new Error(error.message || "Something went wrong");
+  }
+};
 
 export const subscription = async () => {
   try {

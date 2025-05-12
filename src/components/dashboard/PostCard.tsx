@@ -31,6 +31,7 @@ const PostCard: React.FC<PostCardProps> = ({
   status,
   isPremium,
   date,
+  comments,
   onStatusChange,
   onPremiumToggle,
   onClick,
@@ -114,7 +115,9 @@ const PostCard: React.FC<PostCardProps> = ({
       </div>
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-semibold text-lg line-clamp-1">{title}</h3>
+          <div className="flex justify-between">
+            <h3 className="font-semibold text-lg line-clamp-1">{title}</h3>
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -152,13 +155,17 @@ const PostCard: React.FC<PostCardProps> = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
-        <div className="flex items-center text-xs text-muted-foreground mb-2">
-          <span>{category?.name}</span>
-          <span className="mx-1">•</span>
-          <span>By {user?.name}</span>
-          <span className="mx-1">•</span>
-          <span>{date}</span>
+        <div className=" flex justify-between items-center">
+          <div className="flex items-center text-xs text-muted-foreground mb-2">
+            <span>{category?.name}</span>
+            <span className="mx-1">•</span>
+            <span>By {user?.name}</span>
+            <span className="mx-1">•</span>
+            <span>{date}</span>
+          </div>
+          <p className="font-semibold text-sm line-clamp-1">
+            comment: {comments?.length}
+          </p>
         </div>
 
         <p className="text-sm text-muted-foreground line-clamp-2">{excerpt}</p>

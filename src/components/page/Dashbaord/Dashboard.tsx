@@ -3,7 +3,7 @@ import NotFoundProudct from "@/components/dashboard/NotFoundProudct";
 import PostCard from "@/components/dashboard/PostCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import StatCard from "@/components/dashboard/StartCard";
-import { mockActivity, mockStats } from "@/components/data/mockData";
+import { mockActivity } from "@/components/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postAprroved, premiumAprroved } from "@/services/postService";
 import { PostStatus } from "@/types";
@@ -19,18 +19,31 @@ import {
   YAxis,
 } from "recharts";
 
-const data = [
-  { name: "Jan", posts: 24, users: 40 },
-  { name: "Feb", posts: 30, users: 45 },
-  { name: "Mar", posts: 28, users: 48 },
-  { name: "Apr", posts: 32, users: 51 },
-  { name: "May", posts: 40, users: 66 },
-  { name: "Jun", posts: 38, users: 62 },
-];
+// const data = [
+//   { name: "Jan", posts: 24, users: 40 },
+//   { name: "Feb", posts: 30, users: 45 },
+//   { name: "Mar", posts: 28, users: 48 },
+//   { name: "Apr", posts: 32, users: 51 },
+//   { name: "May", posts: 40, users: 66 },
+//   { name: "Jun", posts: 38, users: 62 },
+// ];
+interface IData {
+  name: string;
+  posts: number;
+  users: number;
+}
+interface ImockStats {
+  users: number;
+  posts: number;
+  premiumPosts: number;
+  comments: number;
+}
 interface IDashbaordProps {
   posts: Post[];
+  data: IData[];
+  mockStats: ImockStats;
 }
-const Dashboard: React.FC<IDashbaordProps> = ({ posts }) => {
+const Dashboard: React.FC<IDashbaordProps> = ({ posts, data, mockStats }) => {
   const handleStatusChange = async (id: string, status: PostStatus) => {
     await postAprroved(id, status);
   };
@@ -58,26 +71,26 @@ const Dashboard: React.FC<IDashbaordProps> = ({ posts }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Posts"
-          value={mockStats.posts.total}
-          change={{ value: mockStats.posts.growth + "%", positive: true }}
+          value={mockStats?.posts}
+          change={{ value: 50 + "%", positive: true }}
           icon={<FileText className="h-5 w-5 text-primary" />}
         />
         <StatCard
           title="Total Users"
-          value={mockStats.users.total}
-          change={{ value: mockStats.users.growth + "%", positive: true }}
+          value={mockStats?.users}
+          change={{ value: 10 + "%", positive: true }}
           icon={<Users className="h-5 w-5 text-primary" />}
         />
         <StatCard
           title="Total Comments"
-          value={mockStats.comments.total}
-          change={{ value: mockStats.comments.growth + "%", positive: true }}
+          value={mockStats?.comments}
+          change={{ value: 20 + "%", positive: true }}
           icon={<MessageSquare className="h-5 w-5 text-primary" />}
         />
         <StatCard
           title="Premium Content"
-          value={mockStats.premium.total}
-          change={{ value: mockStats.premium.growth + "%", positive: true }}
+          value={mockStats?.premiumPosts}
+          change={{ value: 12 + "%", positive: true }}
           icon={<Star className="h-5 w-5 text-primary" />}
         />
       </div>

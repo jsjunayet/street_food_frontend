@@ -17,34 +17,27 @@ import {
   YAxis,
 } from "recharts";
 
-const visitorData = [
-  { name: "Jan", users: 2400 },
-  { name: "Feb", users: 2210 },
-  { name: "Mar", users: 2290 },
-  { name: "Apr", users: 2780 },
-  { name: "May", users: 1890 },
-  { name: "Jun", users: 2390 },
-  { name: "Jul", users: 3490 },
-];
+type VisitorDataType = {
+  name: string;
+  users: number;
+};
 
-const contentData = [
-  { name: "Jan", posts: 45, comments: 120 },
-  { name: "Feb", posts: 38, comments: 110 },
-  { name: "Mar", posts: 52, comments: 135 },
-  { name: "Apr", posts: 40, comments: 85 },
-  { name: "May", posts: 35, comments: 88 },
-  { name: "Jun", posts: 42, comments: 95 },
-  { name: "Jul", posts: 55, comments: 140 },
-];
+type ContentDataType = {
+  name: string;
+  posts: number;
+  comments: number;
+};
 
-const categoryData = [
-  { name: "Baking", value: 24 },
-  { name: "Drinks", value: 18 },
-  { name: "Nutrition", value: 15 },
-  { name: "Cooking", value: 32 },
-  { name: "Travel", value: 9 },
-  { name: "Food History", value: 7 },
-];
+type CategoryDataType = {
+  name: string;
+  value: number;
+};
+
+type AnalyticsProps = {
+  contentData: ContentDataType[];
+  categoryData: CategoryDataType[];
+  visitorData: VisitorDataType[];
+};
 
 const COLORS = [
   "#6A8D73",
@@ -55,7 +48,11 @@ const COLORS = [
   "#d49b54",
 ];
 
-const Analytics = () => {
+const Analytics: React.FC<AnalyticsProps> = ({
+  contentData,
+  categoryData,
+  visitorData,
+}) => {
   return (
     <div>
       <div className="space-y-6">

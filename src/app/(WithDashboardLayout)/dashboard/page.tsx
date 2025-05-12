@@ -1,4 +1,5 @@
 import Dashboard from "@/components/page/Dashbaord/Dashboard";
+import { dashbaordOverview } from "@/services/AuthService";
 import { getAllPostForAdmin } from "@/services/postService";
 import { Metadata } from "next";
 
@@ -8,9 +9,14 @@ export const metadata: Metadata = {
 };
 const Dashbaord = async () => {
   const res = await getAllPostForAdmin();
+  const result = await dashbaordOverview();
   return (
     <div>
-      <Dashboard posts={res.data} />
+      <Dashboard
+        mockStats={result?.data?.summary}
+        posts={res?.data}
+        data={result?.data?.monthlyStats}
+      />
     </div>
   );
 };
