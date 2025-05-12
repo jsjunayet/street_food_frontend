@@ -7,7 +7,7 @@ A community-powered platform for discovering and sharing street food spots. User
 ## 🚀 Live Demo
 
 - 🔗 Frontend: [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)
-- 🔗 Backend: [https://your-backend-api-url.com](https://your-backend-api-url.com)
+- 🔗 Backend: [https://your-backend-api-url.com](https://street-foo-finder-backend.vercel.app)
 - 🔐 Admin Login:
   - Email: `admin@gmail.com`
   - Password: `123456`
@@ -67,6 +67,8 @@ A community-powered platform for discovering and sharing street food spots. User
 - Frontend: **Vercel**
 - Backend: **Render / Railway**
 
+---
+
 ## 📦 Installation & Setup
 
 ### 1. Clone the Repository
@@ -76,14 +78,39 @@ git clone https://github.com/yourusername/street_food_finder.git
 cd street_food_finder
 ```
 
+### 2. Install Frontend Dependencies
+
 ```bash
 npm install
+# or
+yarn
 ```
+
+### 3. Environment Setup (Frontend)
+
+Create a `.env.local` file in the root directory and add:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://street-foo-finder-backend.vercel.app/api/v1
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_secret_key
+```
+
+> ⚠️ Replace the values with your actual API endpoint and secret.
+
+### 4. Run Development Server
 
 ```bash
 npm run dev
 ```
 
+> App will be available at: [http://localhost:3000](http://localhost:3000)
+
+### 5. Build for Production
+
 ```bash
 npm run build
+npm start
 ```
+
+---
