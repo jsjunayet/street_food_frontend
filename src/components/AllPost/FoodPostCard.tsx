@@ -294,6 +294,7 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
           height={500}
           width={500}
           src={
+            post?.image ||
             "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop"
           }
           alt={`Food image`}
@@ -314,56 +315,58 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
         </div>
       </CardContent>
       <CardFooter className="border-t pt-3 flex flex-col">
-        <div className="flex justify-between w-full pb-3">
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              // className={vote === "UP" ? "text-blue-600" : ""}
-              onClick={() => handleVote("UP", post.id)}
-            >
-              <ThumbsUp
-              // className={`h-4 w-4 mr-2 ${
-              //   vote === "UP" ? "fill-blue-600" : ""
-              // }`}
-              />
-              Like
-            </Button>
+        <div className="w-full overflow-x-auto md:overflow-visible">
+          <div className="flex justify-between w-full pb-3">
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                // className={vote === "UP" ? "text-blue-600" : ""}
+                onClick={() => handleVote("UP", post.id)}
+              >
+                <ThumbsUp
+                // className={`h-4 w-4 mr-2 ${
+                //   vote === "UP" ? "fill-blue-600" : ""
+                // }`}
+                />
+                Like
+              </Button>
 
+              <Button
+                variant="ghost"
+                size="sm"
+                // className={vote === "DOWN" ? "text-red-600" : ""}
+                onClick={() => handleVote("DOWN", post.id)}
+              >
+                <ThumbsDown
+                // className={`h-4 w-4 mr-2 ${
+                //   vote === "DOWN" ? "fill-red-600" : ""
+                // }`}
+                />
+                Dislike
+              </Button>
+            </div>
             <Button
               variant="ghost"
               size="sm"
-              // className={vote === "DOWN" ? "text-red-600" : ""}
-              onClick={() => handleVote("DOWN", post.id)}
+              onClick={() => setShowComments(!showComments)}
             >
-              <ThumbsDown
-              // className={`h-4 w-4 mr-2 ${
-              //   vote === "DOWN" ? "fill-red-600" : ""
-              // }`}
-              />
-              Dislike
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Comment
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowRatingPanel(!showRatingPanel)}
+            >
+              <Star className="h-4 w-4 mr-2" />
+              Rate
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleShareClick}>
+              <Share className="h-4 w-4 mr-2" />
+              Share
             </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowComments(!showComments)}
-          >
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Comment
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowRatingPanel(!showRatingPanel)}
-          >
-            <Star className="h-4 w-4 mr-2" />
-            Rate
-          </Button>
-          <Button variant="ghost" size="sm" onClick={handleShareClick}>
-            <Share className="h-4 w-4 mr-2" />
-            Share
-          </Button>
         </div>
 
         {showComments && (

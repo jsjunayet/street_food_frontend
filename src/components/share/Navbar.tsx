@@ -54,7 +54,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="sticky top-0 bg-white shadow-md z-50">
+    <nav className="sticky top-0 bg-white shadow-md z-50 px-2 md:px-0">
       <div className="max-w-7xl mx-auto py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -199,11 +199,23 @@ const Navbar = () => {
             >
               Premium
             </Link>
-            {user?.role === "USER" && (
+
+            <Link
+              href="/about"
+              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            >
+              Contact
+            </Link>
+            {user?.role === "ADMIN" && (
               <Link
                 href="/dashboard"
                 className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
-                onClick={toggleMenu}
               >
                 Dashboard
               </Link>
@@ -220,7 +232,6 @@ const Navbar = () => {
                     <div className="w-8 h-8 rounded-full bg-[#FFC15E]  font-serif text-[#333333] flex items-center justify-center">
                       JD
                     </div>
-                    <span>Profile</span>
                   </Link>
                   <Button
                     variant="ghost"

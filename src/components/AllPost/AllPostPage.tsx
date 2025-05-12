@@ -163,7 +163,7 @@ const AllPostPage: React.FC<IAllPostPros> = ({ posts, categoriess }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto py-8 md:px-4 px-2">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Food Discoveries Feed
         </h1>

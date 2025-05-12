@@ -6,7 +6,7 @@ A community-powered platform for discovering and sharing street food spots. User
 
 ## 🚀 Live Demo
 
-- 🔗 Frontend: [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)
+- 🔗 Frontend: [https://your-frontend-url.vercel.app](https://streegrub.vercel.app)
 - 🔗 Backend: [https://your-backend-api-url.com](https://street-foo-finder-backend.vercel.app)
 - 🔐 Admin Login:
   - Email: `admin@gmail.com`

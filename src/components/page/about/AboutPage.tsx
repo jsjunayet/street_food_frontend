@@ -5,7 +5,7 @@ import React from "react";
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="min-h-screen mt-10">
+    <div className="min-h-screen mt-10 md:px-0 px-2">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
