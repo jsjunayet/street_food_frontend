@@ -52,9 +52,10 @@ export const createCategory = async (name: string): Promise<any> => {
   }
 };
 export const updateCategory = async (
-  data: string,
-  id: string
+  id: string,
+  data: string
 ): Promise<any> => {
+  console.log(data, id, "servere");
   const token = (await cookies()).get("accessToken")!.value;
 
   try {

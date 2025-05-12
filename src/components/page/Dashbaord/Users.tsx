@@ -70,8 +70,8 @@ const Users: React.FC<IusersProps> = ({ users }) => {
           />
         </div>
 
-        <Tabs defaultValue="all">
-          <TabsList>
+        <Tabs defaultValue="all" className="w-[390px] md:w-full ">
+          <TabsList className="flex w-full overflow-x-auto whitespace-nowrap gap-2 scrollbar-hide">
             <TabsTrigger value="all" className="flex items-center gap-1">
               <UserIcon className="h-4 w-4" />
               All Users

@@ -1,4 +1,5 @@
 import Footer from "@/components/share/Footer";
+import { MobileNav } from "@/components/share/MobileNav";
 import Navbar from "@/components/share/Navbar";
 import Providers from "@/providers/Providers";
 import { Toaster } from "sonner";
@@ -17,6 +18,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <MobileNav />
         </Providers>
       </body>
     </html>

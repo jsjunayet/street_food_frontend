@@ -24,10 +24,10 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const handleSubmit = async () => {
+    console.log("handle submit");
     if (!categoryName.trim()) return;
 
     if (editingId) {
-      console.log(editingId);
       await updateCategory(editingId, categoryName);
     } else {
       await createCategory(categoryName);
