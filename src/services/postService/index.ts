@@ -140,7 +140,7 @@ export const postAprroved = async (
   }
 };
 
-export const createVote = async (data: FormData): Promise<any> => {
+export const createVote = async (data: Record<string, any>): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {
@@ -159,7 +159,7 @@ export const createVote = async (data: FormData): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
-export const createRating = async (data: FormData): Promise<any> => {
+export const createRating = async (data: Record<string, any>): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {
@@ -181,7 +181,9 @@ export const createRating = async (data: FormData): Promise<any> => {
     throw new Error(error.message || "Something went wrong");
   }
 };
-export const createComment = async (data: FormData): Promise<any> => {
+export const createComment = async (
+  data: Record<string, any>
+): Promise<any> => {
   const token = (await cookies()).get("accessToken")!.value;
 
   try {

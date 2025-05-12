@@ -52,7 +52,6 @@ const Navbar = () => {
 
     fetchData();
   }, []);
-  console.log(user, "user");
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">

@@ -1,18 +1,14 @@
 "use client";
+import NotFoundProudct from "@/components/dashboard/NotFoundProudct";
 import PostCard from "@/components/dashboard/PostCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import StatCard from "@/components/dashboard/StartCard";
 import { mockActivity, mockStats } from "@/components/data/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postAprroved, premiumAprroved } from "@/services/postService";
+import { PostStatus } from "@/types";
 import { Post } from "@/types/user";
-import {
-  CheckCircle,
-  FileText,
-  MessageSquare,
-  Star,
-  Users,
-} from "lucide-react";
+import { FileText, MessageSquare, Star, Users } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -44,7 +40,7 @@ const Dashboard: React.FC<IDashbaordProps> = ({ posts }) => {
   };
   const pendingPost: Post[] =
     posts
-      .filter((post: Post) => post.status === "pending")
+      ?.filter((post: Post) => post.status === "pending")
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -130,13 +126,10 @@ const Dashboard: React.FC<IDashbaordProps> = ({ posts }) => {
         <h2 className="text-xl font-semibold mb-4">All Recently Post</h2>
 
         {pendingPost.length === 0 ? (
-          <Card className="flex flex-col py-20 items-center justify-center p-10 text-center text-muted-foreground">
-            <CheckCircle className="w-10 h-10 text-green-500 mb-4" />
-            <p className="text-lg font-medium">No pending posts found</p>
-            <p className="text-sm">
-              All content has been reviewed and approved.
-            </p>
-          </Card>
+          <NotFoundProudct
+            title={"No pending posts found"}
+            details={" All content has been reviewed and approved."}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {pendingPost.map((post) => (

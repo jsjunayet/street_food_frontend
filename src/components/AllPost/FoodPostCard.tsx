@@ -84,24 +84,27 @@ const FoodPostCard: React.FC<FoodPostCardProps> = ({ post }) => {
   const [newComment, setNewComment] = useState("");
   const [showRatingPanel, setShowRatingPanel] = useState(false);
   const handleVote = async (type: "UP" | "DOWN", postId: string) => {
-    const formData = new FormData();
-    formData.append("postId", postId);
-    formData.append("vote", type);
-    await createVote(formData); // Now, passing FormData instead of plain object
+    const paylaod = {
+      postId,
+      vote: type,
+    };
+    await createVote(paylaod); // Now, passing FormData instead of plain object
   };
 
   const handleAddComment = async (postId: string) => {
-    const formData = new FormData();
-    formData.append("postId", postId);
-    formData.append("commentText", newComment);
-    await createComment(formData); // Passing FormData instead of plain object
+    const paylaod = {
+      postId,
+      commentText: newComment,
+    };
+    await createComment(paylaod);
   };
 
   const handleRatePost = async (postId: string, start: number) => {
-    const formData = new FormData();
-    formData.append("postId", postId);
-    formData.append("rating", String(start)); // Convert rating to string
-    await createRating(formData); // Passing FormData instead of plain object
+    const paylaod = {
+      postId,
+      rating: start,
+    };
+    await createRating(paylaod);
   };
 
   const handleShareClick = () => {

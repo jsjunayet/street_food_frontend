@@ -1,5 +1,6 @@
 "use client";
 import CommentCard from "@/components/dashboard/CommentCart";
+import NotFoundProudct from "@/components/dashboard/NotFoundProudct";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { deletedComment, updateComment } from "@/services/commentservice";
@@ -26,9 +27,10 @@ const Comments: React.FC<commentsPros> = ({ Postcomments }) => {
   };
 
   // Filtered comments based on search query
-  const filteredComments = Postcomments.filter((comment) =>
-    comment.commentText.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredComments: Comment[] =
+    Postcomments?.filter((comment: Comment) =>
+      comment.commentText.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
 
   return (
     <div>
@@ -78,9 +80,10 @@ const Comments: React.FC<commentsPros> = ({ Postcomments }) => {
             </div>
 
             {filteredComments.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No comments found</p>
-              </div>
+              <NotFoundProudct
+                title="No comments found"
+                details="There are no comment posts yet"
+              />
             )}
           </TabsContent>
         </Tabs>

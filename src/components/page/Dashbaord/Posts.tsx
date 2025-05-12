@@ -1,4 +1,5 @@
 "use client";
+import NotFoundProudct from "@/components/dashboard/NotFoundProudct";
 import PostCard from "@/components/dashboard/PostCard";
 import PostDetail from "@/components/dashboard/PostDetails";
 import { Button } from "@/components/ui/button";
@@ -218,9 +219,34 @@ const Posts: React.FC<PostsProps> = ({ posts, categories }) => {
             </div>
 
             {filteredPosts?.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No posts found</p>
-              </div>
+              <NotFoundProudct
+                title={
+                  searchText.trim()
+                    ? "No posts matched your search"
+                    : selectedTab === "pending"
+                    ? "No pending posts"
+                    : selectedTab === "approved"
+                    ? "No approved posts"
+                    : selectedTab === "rejected"
+                    ? "No rejected posts"
+                    : selectedCategory !== "all"
+                    ? `No posts in '${selectedCategory}' category`
+                    : "No posts found"
+                }
+                details={
+                  searchText.trim()
+                    ? "Try changing the search keyword."
+                    : selectedTab === "pending"
+                    ? "All content has been reviewed or approved."
+                    : selectedTab === "approved"
+                    ? "There are no approved posts yet."
+                    : selectedTab === "rejected"
+                    ? "There are no rejected posts yet."
+                    : selectedCategory !== "all"
+                    ? `No posts available under the '${selectedCategory}' category.`
+                    : "Try posting some new content!"
+                }
+              />
             )}
           </TabsContent>
         </Tabs>

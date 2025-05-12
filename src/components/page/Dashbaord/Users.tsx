@@ -1,4 +1,5 @@
 "use client";
+import NotFoundProudct from "@/components/dashboard/NotFoundProudct";
 import UserTable from "@/components/dashboard/UserTable";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -100,33 +101,63 @@ const Users: React.FC<IusersProps> = ({ users }) => {
           </TabsList>
 
           <TabsContent value="all" className="mt-6">
-            <UserTable
-              users={filteredUsers}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
+            {filteredUsers?.length > 0 ? (
+              <UserTable
+                users={filteredUsers}
+                onDeleteUser={handleDeleteUser}
+                onUpdateRole={handleUpdateRole}
+              />
+            ) : (
+              <NotFoundProudct
+                title="No users found"
+                details="Try adjusting your search or filters."
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="premium" className="mt-6">
-            <UserTable
-              users={premiumUsers}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
+            {premiumUsers?.length > 0 ? (
+              <UserTable
+                users={premiumUsers}
+                onDeleteUser={handleDeleteUser}
+                onUpdateRole={handleUpdateRole}
+              />
+            ) : (
+              <NotFoundProudct
+                title="No premium users"
+                details="No users with premium access at the moment."
+              />
+            )}
           </TabsContent>
+
           <TabsContent value="admin" className="mt-6">
-            <UserTable
-              users={AdminUsers}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
+            {AdminUsers?.length > 0 ? (
+              <UserTable
+                users={AdminUsers}
+                onDeleteUser={handleDeleteUser}
+                onUpdateRole={handleUpdateRole}
+              />
+            ) : (
+              <NotFoundProudct
+                title="No admin users"
+                details="No admin roles assigned yet."
+              />
+            )}
           </TabsContent>
+
           <TabsContent value="user" className="mt-6">
-            <UserTable
-              users={NormalUser}
-              onDeleteUser={handleDeleteUser}
-              onUpdateRole={handleUpdateRole}
-            />
+            {NormalUser?.length > 0 ? (
+              <UserTable
+                users={NormalUser}
+                onDeleteUser={handleDeleteUser}
+                onUpdateRole={handleUpdateRole}
+              />
+            ) : (
+              <NotFoundProudct
+                title="No regular users"
+                details="Try adding more users or removing filters."
+              />
+            )}
           </TabsContent>
         </Tabs>
       </div>
