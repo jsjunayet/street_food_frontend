@@ -1,12 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { getCurrentUser, logout } from "@/services/AuthService";
 import { IUser } from "@/types";
-import { Menu, Search, X } from "lucide-react";
-
+import { BookmarkCheck, LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Navbar = () => {
   const [user, setUser] = useState<IUser | null>(null);
@@ -117,28 +125,47 @@ const Navbar = () => {
 
         {/* Desktop Search & Auth */}
         <div className="hidden md:flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="icon"
-            className=" font-serif text-[#333333] border-gray-200"
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-
           {user ? (
             <div className="flex items-center gap-4">
-              <Link href="/profile">
-                <div className="w-9 h-9 rounded-full bg-[#FFC15E]  font-serif text-[#333333] flex items-center justify-center">
-                  JD
-                </div>
-              </Link>
-              <Button
-                variant="secondary"
-                onClick={() => handleLogout()}
-                className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors cursor-pointer"
-              >
-                Logout
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Avatar className="h-8 w-8 border-2 border-streetgrub-orange cursor-pointer">
+                      <AvatarImage src={user?.image || ""} alt="User" />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/profile"
+                      className="flex items-center cursor-pointer"
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <BookmarkCheck className="mr-2 h-4 w-4" />
+                    Saved
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <p
+                      onClick={() => handleLogout()}
+                      className=" font-serif text-[#333333] flex items-center gap-1 hover:text-[#FF6b35] transition-colors cursor-pointer"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </p>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <div className="flex items-center gap-3">
