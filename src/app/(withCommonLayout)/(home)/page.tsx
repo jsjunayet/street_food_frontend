@@ -1,3 +1,4 @@
+import Categories from "@/components/page/home/Categories";
 import Category from "@/components/page/home/Category";
 import GoPremium from "@/components/page/home/GoPremium";
 import FeaturedSpots from "@/components/page/home/hero/FeatureSport";
@@ -20,6 +21,7 @@ export default async function Home() {
       <main className="flex-grow">
         <HeroSection />
         <div className=" max-w-7xl md:mx-auto mx-2 py-12">
+          <Categories />
           <FeaturedSpots posts={Post?.data} user={res.data} />
           <Category />
           {/* <FoodSpotList /> */}

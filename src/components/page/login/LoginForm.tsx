@@ -28,27 +28,31 @@ const LoginForm = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await loginUser(data);
       setIsLoading(true);
+      const res = await loginUser(data);
+
       if (res?.success) {
-        toast.success(res?.message);
         if (redirect) {
           router.push(redirect);
+          toast.success(res?.message);
         } else {
           router.push("/");
+          toast.success(res?.message);
         }
       } else {
+        setIsLoading(false);
         toast.error(res?.message);
       }
     } catch (err: any) {
-      toast.error(err);
+      setIsLoading(false);
+      toast.error(err.message || "Something went wrong!");
     }
   };
 
   const handleDefaultLogin = (type: "admin" | "user" | "premium") => {
     const presets = {
-      admin: { email: "admin@gmail.com", password: "123456" },
-      user: { email: "normaluser@gmail.com", password: "123456" },
+      admin: { email: "admin1@gmail.com", password: "123456" },
+      user: { email: "junayetshiblu50@gmail.com", password: "123456" },
       premium: { email: "premium@gmail.com", password: "123456" },
     };
 
@@ -154,6 +158,7 @@ const LoginForm = () => {
           </div>
 
           <Button
+            disabled={isSubmitting}
             type="submit"
             className="w-full bg-[#FF6b35] hover:bg-[#FF6b35]/90"
           >

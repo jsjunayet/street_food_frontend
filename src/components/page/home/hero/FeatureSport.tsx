@@ -34,7 +34,7 @@ const FeaturedSpots: React.FC<FeaturedSpotsProps> = ({ user, posts }) => {
           <Link href={"/allpost"}>
             <Button
               variant="ghost"
-              className="text-street-orange hover:text-street-orange/90 flex items-center gap-2"
+              className="text-[#FF6B35] hover:text-[#FF6B35]/90 flex items-center gap-2"
             >
               View All <ArrowRight className="w-4 h-4" />
             </Button>

@@ -10,11 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useUser } from "@/context/UserContext";
+import { logout } from "@/services/AuthService";
 import { Bell, Download, HelpCircle, LogOut, Settings } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const AdminHeader = () => {
   const pathname = usePathname();
+  const { setUser } = useUser();
+  const router = useRouter();
   const getPageTitle = () => {
     switch (pathname) {
       case "/":
@@ -32,6 +36,11 @@ const AdminHeader = () => {
       default:
         return "Dashboard";
     }
+  };
+  const handleLogout = async () => {
+    logout();
+    setUser(null);
+    router.push("/");
   };
 
   return (
@@ -122,8 +131,14 @@ const AdminHeader = () => {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOut className="h-4 w-4 mr-2" />
-              <span>Log out</span>
+              <Button
+                variant="ghost"
+                className=" w-full"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                <span>Log out</span>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

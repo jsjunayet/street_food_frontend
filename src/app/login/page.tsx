@@ -1,11 +1,12 @@
+"use client";
+
 import LoginForm from "@/components/page/login/LoginForm";
+import { Suspense } from "react";
 
-const Login = () => {
+export default function LoginPage() {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <LoginForm />
-    </div>
+    </Suspense>
   );
-};
-
-export default Login;
+}
