@@ -88,6 +88,12 @@ const Navbar = () => {
             About
           </Link>
           <Link
+            href="/faq"
+            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+          >
+            FAQ
+          </Link>
+          <Link
             href="/contact"
             className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
