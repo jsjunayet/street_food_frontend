@@ -13,6 +13,7 @@ import { useUser } from "@/context/UserContext";
 import {
   BarChart2,
   CheckCircle,
+  Disc2Icon,
   Grid,
   Home,
   MessageSquare,
@@ -60,6 +61,11 @@ const AdminSidebar = () => {
       title: "Analytics",
       path: "/dashboard/analytics",
       icon: <BarChart2 className="h-5 w-5" />,
+    },
+    {
+      title: "Coupon",
+      path: "/dashboard/coupon",
+      icon: <Disc2Icon className="h-5 w-5" />,
     },
   ];
 

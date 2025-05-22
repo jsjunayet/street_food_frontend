@@ -18,6 +18,7 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import CouponForm from "../page/coupon/CouponForm";
 
 // ✅ Schema
 const formSchema = z.object({
@@ -186,7 +187,7 @@ const SubscriptionForm = () => {
         />
 
         <Card className="bg-muted/50 p-4 rounded-lg">
-          <div className="flex justify-between items-center">
+          <div className="md:flex justify-between items-center">
             <div>
               <h3 className="font-semibold">Premium Membership</h3>
               <p className="text-sm text-muted-foreground">Life Time Access</p>
@@ -194,6 +195,9 @@ const SubscriptionForm = () => {
             <div className="text-right">
               <p className="font-bold text-xl">1000৳</p>
               <p className="text-xs text-muted-foreground">One-time payment</p>
+            </div>
+            <div>
+              <CouponForm />
             </div>
           </div>
         </Card>
