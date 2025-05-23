@@ -1,9 +1,11 @@
 import CouponManagement from "@/components/page/coupon/CouponPage";
+import { getAllcoupon } from "@/services/CouponService";
 
-const Coupon = () => {
+const Coupon = async () => {
+  const result = await getAllcoupon();
   return (
     <div>
-      <CouponManagement />
+      <CouponManagement coupons={result?.data} />
     </div>
   );
 };

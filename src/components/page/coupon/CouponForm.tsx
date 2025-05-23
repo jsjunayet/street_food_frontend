@@ -2,7 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import { getAllcoupon } from "@/services/CouponService";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface CouponFormProps {
   onApplyCoupon: (discount: number) => void;
@@ -14,30 +16,41 @@ const CouponForm: React.FC<CouponFormProps> = ({
 }) => {
   const [couponCode, setCouponCode] = useState("");
   const [isApplied, setIsApplied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState(0);
-  const handleApplyCoupon = async (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [coupons, setCoupons] = useState<
+    { code: string; discountPercentage: number; isActive: boolean }[]
+  >([]);
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const res = await getAllcoupon();
+        setCoupons(res.data);
+      } catch (error) {
+        console.error("Failed to fetch coupons", error);
+      }
+    };
+
+    fetchCoupons();
+  }, []);
+  const handleApplyCoupon = async (e: any) => {
     e.stopPropagation();
     if (!couponCode.trim()) {
       return;
     }
-
     setIsLoading(true);
+
     setTimeout(() => {
-      const mockCoupons = {
-        JUNAYET: 20,
-        WELCOME10: 10,
-        STREETFOOD25: 25,
-      };
-
-      const code = couponCode.toUpperCase();
-      const discount = mockCoupons[code as keyof typeof mockCoupons];
-
-      if (discount) {
-        setIsApplied(true);
-        setAppliedDiscount(discount);
-        onApplyCoupon(discount);
+      const matchedCoupon = coupons?.find(
+        (coupon) => coupon.code === couponCode && coupon.isActive === true
+      );
+      setIsApplied(false);
+      if (matchedCoupon) {
+        setAppliedDiscount(matchedCoupon.discountPercentage);
+        onApplyCoupon(matchedCoupon.discountPercentage);
+        setCouponCode("");
       } else {
+        toast.error("Invalid coupon code");
       }
 
       setIsLoading(false);

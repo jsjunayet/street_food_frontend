@@ -9,15 +9,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 const heroBackgrounds = [
   {
     url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&auto=format&fit=crop&q=80&ixlib=rb-4.0.3",
-    title: "Discover Authentic Street Food",
+    title: "Discover Authentic in Street Food",
   },
   {
     url: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1200&auto=format&fit=crop&q=80&ixlib=rb-4.0.3",
     title: "Experience Local Culinary Treasures",
   },
   {
-    url: "https://t3.ftcdn.net/jpg/05/42/04/64/360_F_542046471_kusFXMbS8gBCXjFGAJVZ0fhUOfzxeXGQ.jpg",
-    title: "Find Hidden Food Gems",
+    url: "https://res.cloudinary.com/dztxlecbe/image/upload/v1746883537/nxsba54u4jstbsyikbbx.jpg",
+    title: "Find Hidden Food Gems in StreetGrub",
   },
 ];
 
@@ -92,8 +92,8 @@ const HeroSection: React.FC = () => {
             <div className="w-full h-full overflow-hidden">
               <Image
                 src={bg.url}
-                height={800}
-                width={100}
+                height={700}
+                width={500}
                 alt={`Food Scene ${index + 1}`}
                 className={`w-full h-full object-cover ${
                   currentBg === index ? "animate-zoom" : ""

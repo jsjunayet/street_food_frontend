@@ -38,6 +38,11 @@ type FormValues = z.infer<typeof formSchema>;
 
 const SubscriptionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [discount, setDiscount] = useState(0);
+  console.log(discount, "discount");
+
+  const amount = 1000;
+  const finalAmount = Number(amount - (amount * discount) / 100);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -55,7 +60,7 @@ const SubscriptionForm = () => {
     setIsLoading(true);
     try {
       const payloadData = {
-        amount: "1000",
+        amount: finalAmount.toFixed(2),
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -193,11 +198,18 @@ const SubscriptionForm = () => {
               <p className="text-sm text-muted-foreground">Life Time Access</p>
             </div>
             <div className="text-right">
-              <p className="font-bold text-xl">1000৳</p>
+              <p className="font-bold text-xl">
+                {finalAmount}৳{" "}
+                {discount > 0 && (
+                  <span className="text-sm text-muted-foreground line-through ml-2">
+                    1000৳
+                  </span>
+                )}
+              </p>
               <p className="text-xs text-muted-foreground">One-time payment</p>
             </div>
             <div>
-              <CouponForm />
+              <CouponForm onApplyCoupon={(discount) => setDiscount(discount)} />
             </div>
           </div>
         </Card>

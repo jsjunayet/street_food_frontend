@@ -1,9 +1,11 @@
 import ProfilePage from "@/components/page/profile/ProfilePage";
+import { singleUserget } from "@/services/AuthService";
 
-const Profile = () => {
+const Profile = async () => {
+  const res = await singleUserget();
   return (
     <div>
-      <ProfilePage />
+      <ProfilePage userData={res?.data} />
     </div>
   );
 };

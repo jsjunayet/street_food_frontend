@@ -1,4 +1,4 @@
-import AllPosts from "@/components/AllPost/PostPage";
+import AllPostPage from "@/components/AllPost/AllPostPage";
 import { getAllcategory } from "@/services/categoryservice";
 import { getAllPost } from "@/services/postService";
 import { Metadata } from "next";
@@ -11,8 +11,8 @@ const AllProudct = async () => {
   const { data: Categories } = await getAllcategory();
   return (
     <div>
-      <AllPosts posts={data} categoriess={Categories} />
-      {/* <AllPostPage posts={data} categoriess={Categories} /> */}
+      {/* <AllPosts /> */}
+      <AllPostPage posts={data} categoriess={Categories} />
     </div>
   );
 };

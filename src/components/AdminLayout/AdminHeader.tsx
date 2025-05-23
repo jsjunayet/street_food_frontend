@@ -1,5 +1,4 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +11,8 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useUser } from "@/context/UserContext";
 import { logout } from "@/services/AuthService";
-import { Bell, Download, HelpCircle, LogOut, Settings } from "lucide-react";
+import { Download, LogOut, Settings } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const AdminHeader = () => {
@@ -66,59 +66,6 @@ const AdminHeader = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-slate-600 relative"
-            >
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-500">
-                3
-              </Badge>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-80" align="end">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="max-h-80 overflow-y-auto">
-              <DropdownMenuItem className="py-2">
-                <div>
-                  <p className="font-medium">New post submitted</p>
-                  <p className="text-sm text-muted-foreground">
-                    The Art of Perfect Pasta requires approval
-                  </p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="py-2">
-                <div>
-                  <p className="font-medium">Comment flagged</p>
-                  <p className="text-sm text-muted-foreground">
-                    A comment on Summer Cocktails was reported
-                  </p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="py-2">
-                <div>
-                  <p className="font-medium">New user registered</p>
-                  <p className="text-sm text-muted-foreground">
-                    Emma Wilson joined as premium user
-                  </p>
-                </div>
-              </DropdownMenuItem>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-slate-600"
-        >
-          <HelpCircle className="h-5 w-5" />
-        </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
               className="text-white hover:bg-slate-600"
             >
               <Settings className="h-5 w-5" />
@@ -127,8 +74,9 @@ const AdminHeader = () => {
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={"profile"}>Profile</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Button

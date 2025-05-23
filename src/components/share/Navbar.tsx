@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getCurrentUser, logout } from "@/services/AuthService";
 import { IUser } from "@/types";
-import { BookmarkCheck, LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -148,12 +148,6 @@ const Navbar = () => {
                       Profile
                     </Link>
                   </DropdownMenuItem>
-
-                  <DropdownMenuItem>
-                    <BookmarkCheck className="mr-2 h-4 w-4" />
-                    Saved
-                  </DropdownMenuItem>
-
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <p

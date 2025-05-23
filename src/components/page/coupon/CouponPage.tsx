@@ -12,39 +12,37 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Coupon } from "@/models/Coupon";
+import {
+  createcoupon,
+  deletedcoupon,
+  updatecoupon,
+} from "@/services/CouponService";
 import { useState } from "react";
+import { toast } from "sonner";
+type Coupon = {
+  id: string;
+  code: string;
+  discountPercentage: number;
+  validFrom: string;
+  validUntil: string; // or `Date` if your API returns actual `Date` objects
+  isActive: boolean;
+  usageLimit: number | null;
+  usageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-const dummyCoupons: Coupon[] = [
-  {
-    id: "1",
-    code: "JUNAYET",
-    discountPercentage: 20,
-    validFrom: new Date("2023-01-01"),
-    validUntil: new Date("2025-12-31"),
-    isActive: true,
-    usageLimit: 100,
-    usageCount: 45,
-    createdAt: new Date("2023-01-01"),
-    updatedAt: new Date("2023-01-01"),
-  },
-  {
-    id: "2",
-    code: "WELCOME10",
-    discountPercentage: 10,
-    validFrom: new Date("2023-01-01"),
-    validUntil: new Date("2025-12-31"),
-    isActive: true,
-    usageLimit: null,
-    usageCount: 120,
-    createdAt: new Date("2023-01-01"),
-    updatedAt: new Date("2023-01-01"),
-  },
-];
+type Props = {
+  coupons: Coupon[];
+};
 
-const CouponManagement = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>(dummyCoupons);
-  const [newCoupon, setNewCoupon] = useState({
+const CouponManagement = ({ coupons }: Props) => {
+  console.log(coupons);
+  const [newCoupon, setNewCoupon] = useState<{
+    code: string;
+    discountPercentage: number;
+    validUntil: string;
+  }>({
     code: "",
     discountPercentage: 10,
     validUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
@@ -52,7 +50,8 @@ const CouponManagement = () => {
       .split("T")[0],
   });
 
-  const handleAddCoupon = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleAddCoupon = async () => {
     if (!newCoupon.code) {
       return;
     }
@@ -64,46 +63,43 @@ const CouponManagement = () => {
       return;
     }
 
-    const coupon: Coupon = {
-      id: Math.random().toString(36).substr(2, 9),
+    const coupon = {
       code: newCoupon.code.toUpperCase(),
       discountPercentage: newCoupon.discountPercentage,
-      validFrom: new Date(),
-      validUntil: new Date(newCoupon.validUntil),
+      validFrom: new Date().toISOString(),
+      validUntil: new Date(newCoupon.validUntil).toISOString(),
       isActive: true,
       usageLimit: null,
       usageCount: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
-    setCoupons([...coupons, coupon]);
-    setNewCoupon({
-      code: "",
-      discountPercentage: 10,
-      validUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-        .toISOString()
-        .split("T")[0],
-    });
+    setIsLoading(true);
+    const result = await createcoupon(coupon);
+    if (result.success) {
+      toast.success("Successfull added Coupon");
+      setNewCoupon({
+        code: "",
+        discountPercentage: 10,
+        validUntil: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        )
+          .toISOString()
+          .split("T")[0],
+      });
+      setIsLoading(false);
+    } else {
+      toast.error("Failed added Coupon");
+      setIsLoading(false);
+    }
   };
 
-  const toggleCouponStatus = (id: string) => {
-    setCoupons(
-      coupons.map((coupon) => {
-        if (coupon.id === id) {
-          return {
-            ...coupon,
-            isActive: !coupon.isActive,
-            updatedAt: new Date(),
-          };
-        }
-        return coupon;
-      })
-    );
+  const toggleCouponStatus = async (id: string) => {
+    await updatecoupon(id);
   };
 
-  const deleteCoupon = (id: string) => {
-    setCoupons(coupons.filter((coupon) => coupon.id !== id));
+  const deleteCoupon = async (id: string) => {
+    await deletedcoupon(id);
   };
 
   return (
@@ -160,8 +156,12 @@ const CouponManagement = () => {
                 />
               </div>
             </div>
-            <Button onClick={handleAddCoupon} className="mt-4">
-              Create Coupon
+            <Button
+              disabled={isLoading}
+              onClick={handleAddCoupon}
+              className="mt-4"
+            >
+              {isLoading ? "Create Couponing..." : "Create Coupon"}
             </Button>
           </CardContent>
         </Card>
@@ -176,24 +176,24 @@ const CouponManagement = () => {
                 <span className="text-sm text-muted-foreground">
                   Total Coupons
                 </span>
-                <p className="text-2xl font-bold">{coupons.length}</p>
+                <p className="text-2xl font-bold">{coupons?.length}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">
                   Active Coupons
                 </span>
                 <p className="text-2xl font-bold">
-                  {coupons.filter((c) => c.isActive).length}
+                  {coupons?.filter((c) => c.isActive).length}
                 </p>
               </div>
-              <div>
+              {/* <div>
                 <span className="text-sm text-muted-foreground">
                   Total Redemptions
                 </span>
                 <p className="text-2xl font-bold">
-                  {coupons.reduce((acc, curr) => acc + curr.usageCount, 0)}
+                  {coupons?.reduce((acc, curr) => acc + curr.usageCount, 0)}
                 </p>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>
@@ -203,56 +203,56 @@ const CouponManagement = () => {
         <CardHeader>
           <CardTitle>All Coupons</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Code</TableHead>
-                <TableHead>Discount</TableHead>
-                <TableHead>Valid Until</TableHead>
-                <TableHead>Used</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {coupons.map((coupon) => (
-                <TableRow key={coupon.id}>
-                  <TableCell className="font-medium">{coupon.code}</TableCell>
-                  <TableCell>{coupon.discountPercentage}%</TableCell>
-                  <TableCell>
-                    {coupon.validUntil.toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{coupon.usageCount} times</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        checked={coupon.isActive}
-                        onCheckedChange={() => toggleCouponStatus(coupon.id)}
-                      />
-                      <span
-                        className={
-                          coupon.isActive ? "text-green-600" : "text-red-600"
-                        }
-                      >
-                        {coupon.isActive ? "Active" : "Inactive"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteCoupon(coupon.id)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
+        <div className=" md:w-full w-[360px] overflow-x-auto md:overflow-visible">
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Code</TableHead>
+                  <TableHead>Discount</TableHead>
+                  <TableHead>Valid Until</TableHead>
+                  {/* <TableHead>Used</TableHead> */}
+                  <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
+              </TableHeader>
+              <TableBody>
+                {coupons?.map((coupon: Coupon) => (
+                  <TableRow key={coupon.id}>
+                    <TableCell className="font-medium">{coupon.code}</TableCell>
+                    <TableCell>{coupon.discountPercentage}%</TableCell>
+                    <TableCell>{coupon.validUntil}</TableCell>
+                    {/* <TableCell>{coupon.usageCount} times</TableCell> */}
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={coupon.isActive}
+                          onCheckedChange={() => toggleCouponStatus(coupon.id)}
+                        />
+                        <span
+                          className={
+                            coupon.isActive ? "text-green-600" : "text-red-600"
+                          }
+                        >
+                          {coupon.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteCoupon(coupon.id)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </div>
       </Card>
     </div>
   );
