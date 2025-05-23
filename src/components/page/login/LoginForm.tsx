@@ -68,7 +68,7 @@ const LoginForm = () => {
           <h2 className="text-2xl font-semibold text-gray-800">Welcome Back</h2>
           <Link
             href="/"
-            className="text-base font-medium text-blue-600 hover:underline hover:text-blue-800 transition-colors"
+            className="text-base font-medium text-primary hover:underline hover:text-primary/80 transition-colors"
           >
             Back to Home
           </Link>
