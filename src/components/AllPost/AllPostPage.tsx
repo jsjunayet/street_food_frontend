@@ -26,7 +26,7 @@ import { Category } from "@/types";
 import { uploadImagesToCloudinary } from "@/utlity/cloudinary";
 import { Filter, MapPin, Search, Upload } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import FoodPostCard, { IPost } from "./FoodPostCard";
 interface IAllPostPros {
@@ -133,7 +133,13 @@ const AllPostPage: React.FC<IAllPostPros> = ({ posts, categoriess }) => {
       setloading(false);
     }
   };
-
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get("search");
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, []);
   const filteredSpots = posts?.filter((spot) => {
     const matchesSearch =
       spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

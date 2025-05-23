@@ -71,52 +71,52 @@ const Navbar = () => {
               SG
             </div>
           </div>
-          <span className="text-xl font-poppins font-bold  font-serif text-[#333333]">
+          <span className="text-xl font-poppins font-bold   text-[#333333]">
             StreetGrub
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-6">
           <Link
             href="/"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             Home
           </Link>
           <Link
             href="/allpost"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             AllPost
           </Link>
 
           <Link
             href="/about"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             About
           </Link>
           <Link
             href="/faq"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             FAQ
           </Link>
           <Link
             href="/contact"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             Contact
           </Link>
           <Link
             href="/premium"
-            className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+            className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
           >
             Premium
           </Link>
           {user?.role === "ADMIN" && (
             <Link
               href="/dashboard"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
             >
               Dashboard
             </Link>
@@ -152,7 +152,7 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <p
                       onClick={() => handleLogout()}
-                      className=" font-serif text-[#333333] flex items-center gap-1 hover:text-[#FF6b35] transition-colors cursor-pointer"
+                      className="  text-[#333333] flex items-center gap-1 hover:text-[#FF6b35] transition-colors cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       Logout
@@ -166,7 +166,7 @@ const Navbar = () => {
               <Link href={"login"}>
                 <Button
                   variant="ghost"
-                  className=" font-serif text-[#333333]  transition-colors"
+                  className="  text-[#333333]  transition-colors"
                 >
                   Login
                 </Button>
@@ -182,7 +182,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden  font-serif text-[#333333]"
+          className="md:hidden   text-[#333333]"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
         >
@@ -206,14 +206,14 @@ const Navbar = () => {
           <div className="flex flex-col space-y-4">
             <Link
               href="/"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
               onClick={toggleMenu}
             >
               Home
             </Link>
             <Link
               href="/allpost"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
               onClick={toggleMenu}
             >
               allpost
@@ -221,7 +221,7 @@ const Navbar = () => {
 
             <Link
               href="/premium"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
               onClick={toggleMenu}
             >
               Premium
@@ -229,20 +229,20 @@ const Navbar = () => {
 
             <Link
               href="/about"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
             >
               About
             </Link>
             <Link
               href="/contact"
-              className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+              className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
             >
               Contact
             </Link>
             {user?.role === "ADMIN" && (
               <Link
                 href="/dashboard"
-                className=" font-serif text-[#333333] hover:text-[#FF6b35] transition-colors"
+                className="  text-[#333333] hover:text-[#FF6b35] transition-colors"
               >
                 Dashboard
               </Link>
@@ -256,7 +256,7 @@ const Navbar = () => {
                     onClick={toggleMenu}
                     className="flex items-center gap-2"
                   >
-                    <div className="w-8 h-8 rounded-full bg-[#FFC15E]  font-serif text-[#333333] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-[#FFC15E]   text-[#333333] flex items-center justify-center">
                       JD
                     </div>
                   </Link>
@@ -266,7 +266,7 @@ const Navbar = () => {
                       handleLogout();
                       toggleMenu();
                     }}
-                    className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"
+                    className="justify-start p-0   text-[#333333] hover:text-[#FF6b35]"
                   >
                     Logout
                   </Button>
@@ -280,7 +280,7 @@ const Navbar = () => {
                         // setIsLoggedIn(true);
                         toggleMenu();
                       }}
-                      className="justify-start p-0  font-serif text-[#333333] hover:text-[#FF6b35]"
+                      className="justify-start p-0   text-[#333333] hover:text-[#FF6b35]"
                     >
                       Login
                     </Button>

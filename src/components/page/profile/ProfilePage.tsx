@@ -19,6 +19,7 @@ import {
   MessageCircle,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 interface IComment {
   id: string;
@@ -47,7 +48,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Premium/Non-Premium Banner */}
-        {userData.isPremium ? (
+        {userData?.isPremium ? (
           <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white p-4 rounded-lg mb-6 shadow-lg">
             <div className="md:flex items-center justify-between">
               <div className="flex items-center">
@@ -93,10 +94,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
               <div className="flex flex-col items-center text-center">
                 <div className="relative">
                   <Avatar className="h-24 w-24 border-2 border-streetgrub-orange">
-                    <AvatarImage src={userData.image} alt={userData.name} />
-                    <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={userData?.image} alt={userData?.name} />
+                    <AvatarFallback>{userData?.name.charAt(0)}</AvatarFallback>
                   </Avatar>
-                  {userData.isPremium && (
+                  {userData?.isPremium && (
                     <span className="absolute bottom-0 right-0 bg-yellow-500 p-1 rounded-full">
                       <Crown className="h-4 w-4 text-white" />
                     </span>
@@ -104,12 +105,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                 </div>
 
                 <h2 className="mt-4 text-xl font-semibold text-streetgrub-darkblue">
-                  {userData.name}
+                  {userData?.name}
                 </h2>
 
-                <p className="text-gray-500 text-sm">@{userData.name}</p>
+                <p className="text-gray-500 text-sm">@{userData?.name}</p>
 
-                {userData.isPremium ? (
+                {userData?.isPremium ? (
                   <Badge className="mt-2 bg-streetgrub-yellow text-streetgrub-darkblue hover:bg-streetgrub-yellow/80">
                     <Crown className="h-3 w-3 mr-1" /> Premium Member
                   </Badge>
@@ -128,19 +129,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
 
                 <div className="text-gray-500 text-sm mt-1 flex items-center">
                   <Calendar className="h-4 w-4 mr-1" />
-                  <span>Member since {userData.createdAt}</span>
+                  <span>Member since {userData?.createdAt}</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 w-full mt-6 text-center">
                   <div>
                     <p className="font-semibold text-streetgrub-darkblue">
-                      {userData.posts.length}
+                      {userData?.posts.length}
                     </p>
                     <p className="text-xs text-gray-500">Posts</p>
                   </div>
                   <div>
                     <p className="font-semibold text-streetgrub-darkblue">
-                      {userData.comments.length}
+                      {userData?.comments.length}
                     </p>
                     <p className="text-xs text-gray-500">Comments</p>
                   </div>
@@ -176,14 +177,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                       className="data-[state=active]:bg-[#EB6535] data-[state=active]:text-white"
                     >
                       <User className="h-4 w-4 mr-2" />
-                      Posts ({userData.posts?.length})
+                      Posts ({userData?.posts?.length})
                     </TabsTrigger>
                     <TabsTrigger
                       value="comments"
                       className="data-[state=active]:bg-[#EB6535] data-[state=active]:text-white"
                     >
                       <MessageCircle className="h-4 w-4 mr-2" />
-                      Comments ({userData.comments?.length})
+                      Comments ({userData?.comments?.length})
                     </TabsTrigger>
                   </TabsList>
                 </div>
@@ -228,7 +229,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                                   />
                                 </svg>
-                                {post.upVotes}
+                                {post?.upVotes}
                               </span>
                             </div>
                           </li>
@@ -254,14 +255,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                 href="#"
                                 className="font-medium text-streetgrub-darkblue hover:text-streetgrub-orange"
                               >
-                                {comment.postTitle}
+                                {comment?.postTitle}
                               </a>
                             </p>
                             <p className="mt-1 text-gray-600 line-clamp-2">
-                              {comment.commentText}
+                              {comment?.commentText}
                             </p>
                             <p className="text-xs text-gray-500 mt-1">
-                              {comment.createdAt}
+                              {comment?.createdAt}
                             </p>
                           </li>
                         ))}
@@ -274,7 +275,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                 <div className="mt-6">
                   <Card
                     className={
-                      userData.isPremium
+                      userData?.isPremium
                         ? "border-yellow-300"
                         : "border-gray-200"
                     }
@@ -299,7 +300,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {userData.isPremium ? (
+                      {userData?.isPremium ? (
                         <div className="space-y-4">
                           {userData.posts.map((item: IPost) => (
                             <div
@@ -311,14 +312,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                   <Badge className="mb-2 bg-yellow-100 text-yellow-800 border-yellow-300">
                                     Premium
                                   </Badge>
-                                  <h3 className="font-medium">{item.title}</h3>
-                                  <p className="text-sm text-gray-600 mt-1">
-                                    {item.excerpt}
-                                  </p>
-                                  <div className="flex items-center mt-2 text-sm text-gray-500">
-                                    <MapPin className="h-4 w-4 mr-1" />
-                                    <span>{item.location}</span>
-                                  </div>
+                                  <h3 className="font-medium">{item?.title}</h3>
                                 </div>
                               </div>
                             </div>
@@ -326,7 +320,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          {userData?.posts?.slice(0, 1).map((item: any) => (
+                          {userData?.posts?.slice(0, 1)?.map((item: IPost) => (
                             <div
                               key={item.id}
                               className="border-b border-gray-100 pb-4 opacity-60 hover:opacity-80 transition-opacity"
@@ -338,7 +332,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                   </Badge>
                                   <h3 className="font-medium">{item.title}</h3>
                                   <p className="text-sm text-gray-600 mt-1">
-                                    {item.excerpt.substring(0, 50)}...
+                                    {item?.description.substring(0, 50)}...
                                   </p>
                                   <div className="flex items-center mt-2 text-sm text-gray-500">
                                     <MapPin className="h-4 w-4 mr-1" />
@@ -357,9 +351,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                               Upgrade your account to access exclusive food
                               spots and insider tips.
                             </p>
-                            <Button className="bg-[#EB6535] hover:bg-[#EB6535]/90">
-                              Upgrade to Premium
-                            </Button>
+                            <Link href={"/premium"}>
+                              <Button className="bg-[#EB6535] hover:bg-[#EB6535]/90">
+                                Upgrade to Premium
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       )}
@@ -385,7 +381,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      {userData.posts.map((post: IPost) => (
+                      {userData?.posts?.map((post: IPost) => (
                         <div
                           key={post.id}
                           className="border-b border-gray-100 pb-6 last:border-0 last:pb-0"
@@ -397,22 +393,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                 className="hover:text-streetgrub-orange transition-colors"
                               >
                                 <h3 className="text-xl font-medium">
-                                  {post.title}
+                                  {post?.title}
                                 </h3>
                               </a>
-                              {post.isPremium && (
+                              {post?.isPremium && (
                                 <Badge className="ml-2 bg-yellow-100 text-yellow-800 border-yellow-300">
                                   Premium
                                 </Badge>
                               )}
                             </div>
-                            <p className="text-sm text-gray-500">{post.date}</p>
+                            <p className="text-sm text-gray-500">
+                              {new Date(post?.createdAt).toLocaleDateString()}
+                            </p>
                           </div>
-                          <p className="mt-2 text-gray-600">{post.excerpt}</p>
                           <div className="flex items-center space-x-6 mt-4">
                             <span className="flex items-center text-sm text-gray-500">
                               <MessageCircle className="mr-1 h-4 w-4" />
-                              {post.comments} Comments
+                              {post.comments?.length} Comments
                             </span>
                             <span className="flex items-center text-sm text-gray-500">
                               <svg
@@ -429,7 +426,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                                 />
                               </svg>
-                              {post.likes} Likes
+                              {post?.upVotes} Likes
                             </span>
                           </div>
                         </div>
@@ -449,7 +446,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      {userData.comments.map((comment: any) => (
+                      {userData?.comments?.map((comment: any) => (
                         <div
                           key={comment.id}
                           className="border-b border-gray-100 pb-6 last:border-0 last:pb-0"
@@ -460,15 +457,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ userData }) => {
                               href="#"
                               className="font-medium text-streetgrub-darkblue hover:text-streetgrub-orange"
                             >
-                              {comment.postTitle}
+                              {comment?.postTitle}
                             </a>
                           </p>
                           <p className="mt-2 text-gray-600">
-                            {comment.commentText}
+                            {comment?.commentText}
                           </p>
                           <div className="flex justify-between items-center mt-4">
                             <p className="text-sm text-gray-500">
-                              {comment.createdAt}
+                              {comment?.createdAt}
                             </p>
                           </div>
                         </div>

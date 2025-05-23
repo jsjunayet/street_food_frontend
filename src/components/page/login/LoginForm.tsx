@@ -52,7 +52,7 @@ const LoginForm = () => {
   const handleDefaultLogin = (type: "admin" | "user" | "premium") => {
     const presets = {
       admin: { email: "admin1@gmail.com", password: "123456" },
-      user: { email: "junayetshiblu50@gmail.com", password: "123456" },
+      user: { email: "user10@gmail.com", password: "123456" },
       premium: { email: "premium@gmail.com", password: "123456" },
     };
 
@@ -64,9 +64,15 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen flex justify-center items-center px-2 md:px-0">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full border">
-        <h2 className="text-2xl font-bold text-center mb-6 text-[#333333]">
-          Welcome Back
-        </h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Welcome Back</h2>
+          <Link
+            href="/"
+            className="text-base font-medium text-blue-600 hover:underline hover:text-blue-800 transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
 
         {/* === Role Buttons === */}
         <div className="mb-6 grid grid-cols-3 gap-2">

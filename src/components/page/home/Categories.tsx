@@ -15,6 +15,7 @@ type CategoryType = {
 };
 const Categories = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
+  console.log(categories);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

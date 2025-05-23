@@ -9,12 +9,6 @@ export const getAllcategory = async () => {
       `${process.env.NEXT_PUBLIC_BASE_API}/category/all-retreive`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${
-            (await cookies()).get("accessToken")!.value
-          }`,
-          "Content-Type": "application/json",
-        },
         next: {
           tags: ["category"],
         },

@@ -28,12 +28,12 @@ const Users: React.FC<IusersProps> = ({ users }) => {
   };
 
   const handleUpdateRole = async (id: string, role: UserRole) => {
-    const res = await roleUpate(id, role);
+    await roleUpate(id, role);
     toast.success(`User role updated to ${role}`);
   };
 
   const filteredUsers: IUser[] = searchQuery
-    ? users.filter(
+    ? users?.filter(
         (user: IUser) =>
           user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
           (user.name &&
@@ -41,16 +41,16 @@ const Users: React.FC<IusersProps> = ({ users }) => {
       )
     : users;
 
-  const premiumUsers: IUser[] = filteredUsers.filter((user) => user.isPremium);
-  const AdminUsers: IUser[] = filteredUsers.filter(
+  const premiumUsers: IUser[] = filteredUsers?.filter((user) => user.isPremium);
+  const AdminUsers: IUser[] = filteredUsers?.filter(
     (user) => user.role === "ADMIN"
   );
-  const NormalUser: IUser[] = filteredUsers.filter(
+  const NormalUser: IUser[] = filteredUsers?.filter(
     (user) => user.role === "USER"
   );
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const paginatedUsers = filteredUsers.slice(
+  const totalPages = Math.ceil(filteredUsers?.length / usersPerPage);
+  const paginatedUsers = filteredUsers?.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage
   );
@@ -90,35 +90,35 @@ const Users: React.FC<IusersProps> = ({ users }) => {
               <UserIcon className="h-4 w-4" />
               All Users
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {filteredUsers.length}
+                {filteredUsers?.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="premium" className="flex items-center gap-1">
               <Star className="h-4 w-4" />
               Premium
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {premiumUsers.length}
+                {premiumUsers?.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="admin" className="flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" />
               ADMIN
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {AdminUsers.length}
+                {AdminUsers?.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="user" className="flex items-center gap-1">
               <UserIcon className="h-4 w-4" />
               USER
               <span className="ml-1 text-xs bg-muted rounded-full px-2">
-                {NormalUser.length}
+                {NormalUser?.length}
               </span>
             </TabsTrigger>
           </TabsList>
 
           {/* All Users Tab with Pagination */}
           <TabsContent value="all" className="mt-6">
-            {paginatedUsers.length > 0 ? (
+            {paginatedUsers?.length > 0 ? (
               <>
                 <UserTable
                   users={paginatedUsers}
@@ -163,7 +163,7 @@ const Users: React.FC<IusersProps> = ({ users }) => {
 
           {/* Premium Users */}
           <TabsContent value="premium" className="mt-6">
-            {premiumUsers.length > 0 ? (
+            {premiumUsers?.length > 0 ? (
               <UserTable
                 users={premiumUsers}
                 onDeleteUser={handleDeleteUser}
@@ -179,7 +179,7 @@ const Users: React.FC<IusersProps> = ({ users }) => {
 
           {/* Admin Users */}
           <TabsContent value="admin" className="mt-6">
-            {AdminUsers.length > 0 ? (
+            {AdminUsers?.length > 0 ? (
               <UserTable
                 users={AdminUsers}
                 onDeleteUser={handleDeleteUser}
@@ -195,7 +195,7 @@ const Users: React.FC<IusersProps> = ({ users }) => {
 
           {/* Normal Users */}
           <TabsContent value="user" className="mt-6">
-            {NormalUser.length > 0 ? (
+            {NormalUser?.length > 0 ? (
               <UserTable
                 users={NormalUser}
                 onDeleteUser={handleDeleteUser}

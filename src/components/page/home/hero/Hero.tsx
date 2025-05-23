@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // Define background images with high-quality food photography
@@ -27,6 +28,8 @@ const HeroSection: React.FC = () => {
   const [titleVisible, setTitleVisible] = useState(true);
   const [currentTitle, setCurrentTitle] = useState(heroBackgrounds[0].title);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -164,10 +167,29 @@ const HeroSection: React.FC = () => {
             <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  router.push(
+                    `/allpost?search=${encodeURIComponent(searchTerm)}`
+                  );
+                }
+              }}
               placeholder="Search for street food or location..."
               className="w-full pl-14 pr-32 py-5 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white/90"
             />
-            <Button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-full px-6 py-6 text-white">
+
+            <Button
+              onClick={() => {
+                if (searchTerm.trim()) {
+                  router.push(
+                    `/allpost?search=${encodeURIComponent(searchTerm)}`
+                  );
+                }
+              }}
+              className="absolute cursor-pointer right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-full px-6 py-6 text-white"
+            >
               Search
             </Button>
           </div>
