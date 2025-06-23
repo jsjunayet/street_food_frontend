@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
+// import { FieldValues } from "react-hook-form";
 
 export const SignUpUser = async (userData: FieldValues) => {
   console.log(userData);
